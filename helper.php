@@ -1,8 +1,20 @@
 <?php
 /**
- * TODO:
- * 1. set base path for app/*
+ * TABLE OF CONTENTS
+ * 1. Core
+ * 2. String
+ * 3. Number
+ * 4. Array
+ * 5. Https
+ * 6. Forms
+ * 7. Class
+ * 8. Etc
  */
+
+
+/***************************************************
+ * CORE
+ **************************************************/
 
 /**
  * Require a view.
@@ -19,41 +31,31 @@ if (! function_exists("view")) {
 }
 
 /**
- * Throw new exception
- *
- * @param string $msg
+ * Return file from assets folder
  */
-if (! function_exists("error")) {
-    function error(string $msg)
+if (! function_exists("assets")) {
+    function assets(string $path)
     {
-        throw new \Exception($msg);
+        return 'App/Assets/'.e($path);
     }
 }
 
 /**
- * get all request
- *
- * @return array|string
+ * Redirect to new Page
  */
-if (! function_exists("request")) {
-    function request($key = false)
+if (! function_exists('redirect')) {
+    function redirect(string $to, int $status = 302, array $headers = [])
     {
-        $request = \Http\Request::request();
+        foreach ($headers as $header)
+            header($header);
 
-        if (!$key) {
-            return $request;
-        }
-
-        if (array_key_exists($key, $request)) {
-            return $request[$key];
-        }
-
-        error("Request key doesnt exist");
+        header('location:/' . trim($to, "/"), true, $status);
+        exit;
     }
 }
 
 /**
- * dump and die
+ * Dump and die
  */
 if (! function_exists("dd")) {
     function dd(...$params)
@@ -63,16 +65,9 @@ if (! function_exists("dd")) {
     }
 }
 
-
-/**
- * Return file from assets folder
- */
-if (! function_exists("assets")) {
-    function assets($path)
-    {
-        return 'App/Assets/'.e($path);
-    }
-}
+/***************************************************
+ * STRING
+ **************************************************/
 
 /**
  * Encode string
@@ -84,15 +79,82 @@ if (! function_exists("e")) {
     }
 }
 
-
+/**
+ * Reverse word
+ */
+if (! function_exists("rev")) {
+    function rev(string $string)
+    {
+        return implode(' ', array_reverse(explode(' ', strrev($str)))) ;
+    }
+}
 
 /**
+ * String ends with ?
+ *
+ * @param string $str
+ * @param string $end
+ * @return bool
+ */
+if (! function_exists("ending")) {
+    function ending($str, $end)
+    {
+        return $end == '' || substr_compare($str, $end, -strlen($end)) == 0;
+    }
+}
+
+/***************************************************
+ * NUMBER
+ **************************************************/
+
+/**
+ * Reverse word
+ */
+if (! function_exists("toNegative")) {
+    function toNegative(string $string)
+    {
+        return -abs($num);
+    }
+}
+
+/***************************************************
+ * ARRAY
+ **************************************************/
+
+/***************************************************
+ * HTTP
+ **************************************************/
+
+ /**
+ * Get all request
+ *
+ * @return array|string
+ */
+if (! function_exists("request")) {
+    function request($key = false)
+    {
+        $request = \Http\Request::request();
+
+        if (!$key)
+            return $request;
+
+        if (array_key_exists($key, $request))
+            return $request[$key];
+
+        error("Request key doesnt exist");
+    }
+}
+
+/***************************************************
+ * FORMS
+ **************************************************/
+
+ /**
  * Set csrf token
  */
 if (! function_exists('csrf_token')) {
     function csrf_token()
     {
-        // hash_equals($token, $input)
         $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
         $_SESSION["csrf_lifespan"] = time() + 3600;
         return $_SESSION["csrf_token"];
@@ -124,24 +186,9 @@ if (! function_exists('method_field')) {
     }
 }
 
-/**
- * Redirect to new Page
- */
-if (! function_exists('redirect')) {
-    function redirect(string $to, int $status = 302, array $headers = [])
-    {
-        if ($headers) {
-            foreach ($headers as $header) {
-                header($header);
-            }
-        }
-
-        $to = trim($to, "/");
-
-        header("location:/{$to}", true, $status);
-        exit;
-    }
-}
+ /***************************************************
+ * CLASS
+ **************************************************/
 
 /**
  * Return class basename
@@ -153,5 +200,21 @@ if (! function_exists('class_basename')) {
     {
         $class = is_object($class) ? get_class($class) : $class;
         return basename(str_replace('\\', '/', $class));
+    }
+}
+
+/***************************************************
+ * ETC
+ **************************************************/
+
+/**
+ * Throw new exception
+ *
+ * @param string $msg
+ */
+if (! function_exists("error")) {
+    function error(string $msg)
+    {
+        throw new \Exception($msg);
     }
 }
