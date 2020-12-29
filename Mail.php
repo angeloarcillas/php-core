@@ -14,8 +14,8 @@ class Mail
      */
     public static function to($email)
     {
-        static::$to = $email;
-        return new static;
+        self::$to = $email;
+        return new self;
     }
 
     /**
@@ -23,8 +23,8 @@ class Mail
      */
     public static function subject($subject)
     {
-        static::$subject = $subject;
-        return new static;
+        self::$subject = $subject;
+        return new self;
     }
 
 
@@ -33,8 +33,8 @@ class Mail
      */
     public static function line($msg)
     {
-        static::$message .= "{$msg} \n ";
-        return new static;
+        self::$message .= "{$msg} \n ";
+        return new self;
     }
 
     /**
@@ -43,8 +43,8 @@ class Mail
     public static function view($file)
     {
         // TODO: fix on live server
-        static::$message = file_get_contents("{$file}.view.php") ;
-        return new static;
+        self::$message = file_get_contents("{$file}.view.php") ;
+        return new self;
     }
 
     /**
@@ -52,8 +52,8 @@ class Mail
      */
     public static function headers($headers)
     {
-        static::$headers = $headers;
-        return new static;
+        self::$headers = $headers;
+        return new self;
     }
 
     /**
@@ -71,7 +71,7 @@ class Mail
     {
         // TODO: dynamic mail (optional)
         static::$to = implode(",", static::$to);
-        mail(static::$to, static::$subject, static::$message, static::$headers);
+        mail(self::$to, self::$subject, self::$message, self::$headers);
 
         // success redirect
     }

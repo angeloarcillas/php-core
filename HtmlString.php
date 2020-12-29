@@ -3,10 +3,7 @@ class HtmlString
 {
     public $html;
 
-    public function __construct($html = '')
-    {
-        $this->html = $html;
-    }
+    public function __construct(public string $html = '') {}
 
     public function __toString()
     {
