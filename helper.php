@@ -23,10 +23,10 @@
  * @param  array  $data
  */
 if (! function_exists("view")) {
-    function view(string $name, array $data = [])
+    function view(string $path, array $data = [])
     {
         extract($data);
-        return require "App/Views/{$name}.view.php";
+        return require "App/Views/{$path}.view.php";
     }
 }
 
@@ -50,18 +50,16 @@ if (! function_exists('redirect')) {
             header($header);
 
         header('location:/' . trim($to, "/"), true, $status);
-        exit;
     }
 }
 
 /**
- * Dump and die
+ * Die  and dump
  */
 if (! function_exists("dd")) {
     function dd(...$params)
     {
-        var_dump($params);
-        exit;
+        die(var_dump($params));
     }
 }
 
@@ -131,14 +129,17 @@ if (! function_exists("toNegative")) {
  * @return array|string
  */
 if (! function_exists("request")) {
-    function request($key = false)
+    function request(?string $key = null)
     {
+        // retienve $_REQUEST
         $request = \Http\Request::request();
 
         if (!$key)
-            return $request;
+            // return all request as object
+            return (object) $request;
 
         if (array_key_exists($key, $request))
+            // return request
             return $request[$key];
 
         error("Request key doesnt exist");
@@ -217,4 +218,33 @@ if (! function_exists("error")) {
     {
         throw new \Exception($msg);
     }
+}
+
+/**
+ * Get/set/delete session
+ *
+ * @return mixed
+ */
+function session(string|array $x, bool $delete = false) {
+
+    // session($key, true) | delete session
+    if($delete)
+    {
+        unset($_SESSION[$x]);
+        return;
+    }
+    // session([$key => $value]) | set session
+    if(is_array($x)) {
+        $key = array_keys($x)[0];
+        $_SESSION[$key] = $x[$key];
+        return;
+    }
+
+    // if key doesnt exist
+    if(!isset($_SESSION[$x])) {
+        return false;
+    }
+
+    // session($key) | get session
+    return $_SESSION[$x];
 }
