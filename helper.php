@@ -25,7 +25,10 @@
 if (! function_exists("view")) {
     function view(string $path, array $data = [])
     {
+        // array to variables
         extract($data);
+
+        // append view file
         return require "App/Views/{$path}.view.php";
     }
 }
@@ -36,6 +39,7 @@ if (! function_exists("view")) {
 if (! function_exists("assets")) {
     function assets(string $path)
     {
+        // base path of assets folder
         return 'App/Assets/'.e($path);
     }
 }
@@ -86,6 +90,8 @@ if (! function_exists("e")) {
 
 /**
  * Reverse word
+ *
+ * reverse each words
  */
 if (! function_exists("rev")) {
     function rev(string $string)
@@ -114,7 +120,8 @@ if (! function_exists("ending")) {
  **************************************************/
 
 /**
- * Reverse word
+ *  To negative real number
+ *  int/float to negative real number
  */
 if (! function_exists("toNegative")) {
     function toNegative(string $string)
@@ -179,7 +186,7 @@ if (! function_exists('csrf_token')) {
 if (! function_exists('csrf_field')) {
     function csrf_field()
     {
-        return new HtmlString('<input type="hidden" name="_csrf" value="'. csrf_token() .'">');
+        return '<input type="hidden" name="_csrf" value="'. csrf_token() .'">';
     }
 }
 
@@ -191,7 +198,7 @@ if (! function_exists('csrf_field')) {
 if (! function_exists('method_field')) {
     function method_field(string $method)
     {
-        return new HtmlString('<input type="hidden" name="_method" value="'. $method .'">');
+        return '<input type="hidden" name="_method" value="'. $method .'">';
     }
 }
 
