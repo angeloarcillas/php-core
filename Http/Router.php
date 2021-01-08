@@ -5,14 +5,14 @@ use Exception;
 
 class Router
 {
-    private $host = "PHP-Auth"; // (OPTIONAL)
-    private $controllerNamespace = "App\\Controllers\\";
-    private $validMethods = ['GET','POST'];
+    protected $host = null; // set host path (OPTIONAL)
+    protected $controllerNamespace = "App\\Controllers\\";
+    protected $validMethods = ['GET','POST'];
     private $routes = [
         'GET' => [],
         'POST' => []
     ];
-    private $params = null;
+    protected $params = null;
 
     /**
      * Start buffer
@@ -34,49 +34,49 @@ class Router
     }
 
     /**
-     * Instance router then set routes
+     * Create router instance then set routes
      *
      * @param string $file
      * @return object
      */
     public static function load(string $file): object
     {
-        $router = new static; // create object
+        $router = new static; // create instance
         require $file; // set routes
-        return $router; // return object
+        return $router; // return instance
     }
 
     /**
      * Set GET routes
      *
-     * @param string $uri
+     * @param string $url
      * @param $controller
      */
-    private function get(string $uri, $controller)
+    protected function get(string $url, $controller)
     {
-        $uri = trim($this->host.$uri, '/');
-        $this->routes['GET'][$uri] = $controller;
+        $url = trim($this->host.$url, '/');
+        $this->routes['GET'][$url] = $controller;
     }
 
     /**
      * Set POST routes
      *
-     * @param string $uri
+     * @param string $url
      * @param string $controller
      */
-    private function post(string $uri, $controller)
+    protected function post(string $url, $controller)
     {
-        $uri = trim($this->host.$uri, '/');
-        $this->routes['POST'][$uri] = $controller;
+        $url = trim($this->host.$url, '/');
+        $this->routes['POST'][$url] = $controller;
     }
 
     /**
      * process route
      *
-     * @param string $uri
+     * @param string $url
      * @param string $method
      */
-    public function direct(string $uri, string $method)
+    public function direct(string $url, string $method)
     {
         // validate request method
         if (!$this->isValidMethod(strtoupper($method))) {
@@ -93,7 +93,7 @@ class Router
                 $pattern = preg_replace('/{([\w]+)}/', '(\w+)', $route);
 
                 // match route
-                if (preg_match('/^' . str_replace('/', '\/', $pattern) . '$/', $uri, $values)) {
+                if (preg_match('/^' . str_replace('/', '\/', $pattern) . '$/', $url, $values)) {
                     // get all route wildcards
                     preg_match_all('/{(\w+)}/', $route, $keys);
                     // set parameter keys
@@ -134,7 +134,7 @@ class Router
      * @param string $method
      * @return bool
      */
-    private function isValidMethod(string $method): bool
+    protected function isValidMethod(string $method): bool
     {
         return in_array($method, $this->validMethods, true);
     }
@@ -145,7 +145,7 @@ class Router
      * @param string $controller
      * @param string $action
      */
-    private function callAction(string $controller, string $action)
+    protected function callAction(string $controller, string $action)
     {
         // set class namspace
         $class = $this->controllerNamespace . $controller;
@@ -165,5 +165,18 @@ class Router
 
         // call method from class
         return $object->$action($this->params);
+    }
+
+    /**
+     * Redirect back to previous URL
+     */
+    public function back()
+    {
+        if(isset($_SERVER['HTTP_REFERER']))
+        {
+            header("location: {$_SERVER['HTTP_REFERER']}", true, 302);
+        }
+
+        return null;
     }
 }
