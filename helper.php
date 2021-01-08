@@ -44,11 +44,18 @@ if (! function_exists("assets")) {
  * Redirect to new Page
  */
 if (! function_exists('redirect')) {
-    function redirect(string $to, int $status = 302, array $headers = [])
+    function redirect(?string $to = null, int $status = 302, array $headers = [])
     {
+        if (!$to) {
+            // return router object
+            return new \Core\Http\Router();
+        }
+
+        // loop headers
         foreach ($headers as $header)
             header($header);
 
+        // redirect
         header('location:/' . trim($to, "/"), true, $status);
     }
 }
@@ -89,6 +96,7 @@ if (! function_exists("rev")) {
 
 /**
  * String ends with ?
+ * use str_ends_with() on php 8
  *
  * @param string $str
  * @param string $end
