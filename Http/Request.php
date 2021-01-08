@@ -5,6 +5,14 @@ use Exception;
 
 class Request
 {
+    protected $attributes;
+
+    public function __construct() {
+      $this->attributes = array_map(function ($request) {
+          return strip_tags(htmlspecialchars($request));
+        }, $_REQUEST);
+    }
+
     /**
      * @return string Request url w/out ?(Query string)
      */
@@ -26,14 +34,12 @@ class Request
     /**
      * @return string Request variables
      */
-    public static function request(): array
+    public static function request(): object
     {
       if (empty($_REQUEST))
-          throw new Exception("Empty request");
+          throw new Exception("Error: Empty request");
 
-      return array_map(function ($request) {
-          return strip_tags(htmlspecialchars($request));
-      }, $_REQUEST);
+        return $this;
     }
 
     /**
@@ -48,5 +54,17 @@ class Request
           return $_GET[$key];
 
       throw new Exception("Query {$key} doesnt exist");
+    }
+
+    /**
+     * php __get magic method
+     */
+    public function __get($key)
+    {
+      if (! $this->attributes[$key])
+        return null;
+      // throw new \Exception("Error: Request key doesnt exists.");
+
+      return $this->attributes[$key];
     }
 }
