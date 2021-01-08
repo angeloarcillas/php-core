@@ -2,9 +2,12 @@
 namespace Http;
 
 use Exception;
+use Http\Traits\Validator;
 
 class Request
 {
+    use Validator;
+
     protected $attributes;
 
     public function __construct() {
