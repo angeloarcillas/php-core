@@ -43,7 +43,7 @@ class Mail
     public static function view($file)
     {
         // TODO: fix on live server
-        self::$message = file_get_contents("{$file}.view.php") ;
+        self::$message = view("mail/{$file}");
         return new self;
     }
 
