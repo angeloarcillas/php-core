@@ -19,7 +19,7 @@
 /**
  * Require a view.
  *
- * @param  string $name
+ * @param  string $path
  * @param  array  $data
  */
 if (! function_exists("view")) {
@@ -40,7 +40,7 @@ if (! function_exists("assets")) {
     function assets(string $path)
     {
         // base path of assets folder
-        return 'App/Assets/'.e($path);
+        return 'App/Assets/'. e($path);
     }
 }
 
@@ -51,16 +51,21 @@ if (! function_exists('redirect')) {
     function redirect(?string $to = null, int $status = 302, array $headers = [])
     {
         if (!$to) {
-            // return router object
             return new \Core\Http\Router();
         }
 
         // loop headers
-        foreach ($headers as $header)
+        foreach ($headers as $header) {
             header($header);
+        }
 
         // redirect
-        header('location:/' . trim($to, "/"), true, $status);
+        header('location:/' .
+            trim(str_replace('.', '/', e($to)), '/'),
+            true,
+            $status);
+
+        exit;
     }
 }
 
@@ -96,7 +101,7 @@ if (! function_exists("e")) {
 if (! function_exists("rev")) {
     function rev(string $string)
     {
-        return implode(' ', array_reverse(explode(' ', strrev($str)))) ;
+        return implode(' ', array_reverse(explode(' ', strrev($string)))) ;
     }
 }
 
@@ -124,7 +129,7 @@ if (! function_exists("ending")) {
  *  int/float to negative real number
  */
 if (! function_exists("toNegative")) {
-    function toNegative(string $string)
+    function toNegative(int $num)
     {
         return -abs($num);
     }
@@ -146,18 +151,16 @@ if (! function_exists("toNegative")) {
 if (! function_exists("request")) {
     function request(?string $key = null)
     {
-        // retienve $_REQUEST
-        $request = \Http\Request::request();
+        // create request instance
+        $request = new \Core\Http\Request();
 
-        if (!$key)
-            // return all request as object
-            return (object) $request;
+        // if key is null return Request::class
+        if (!$key) {
+            return $request;
+        }
 
-        if (array_key_exists($key, $request))
-            // return request
-            return $request[$key];
-
-        error("Request key doesnt exist");
+        // return request $attribute[$key]
+        return $request->$key;
     }
 }
 
@@ -171,8 +174,19 @@ if (! function_exists("request")) {
 if (! function_exists('csrf_token')) {
     function csrf_token()
     {
-        $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
-        $_SESSION["csrf_lifespan"] = time() + 3600;
+        // if no csrf token then create
+       if (!isset($_SESSION['csrf_token'])) {
+            // set csrf token
+            $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+
+            // set csrf token lifespan
+            $_SESSION["csrf_lifespan"] = time() + 3600;
+
+            // return token
+            return $_SESSION["csrf_token"];
+        }
+
+        // return token
         return $_SESSION["csrf_token"];
     }
 }
@@ -240,26 +254,60 @@ if (! function_exists("error")) {
  *
  * @return mixed
  */
-function session(string|array $x, bool $delete = false) {
+function session(string|array $data, bool $delete = false) {
 
     // session($key, true) | delete session
-    if($delete)
-    {
-        unset($_SESSION[$x]);
+    if($delete) {
+        unset($_SESSION[$data]);
         return;
     }
     // session([$key => $value]) | set session
-    if(is_array($x)) {
-        $key = array_keys($x)[0];
-        $_SESSION[$key] = $x[$key];
+    if(is_array($data)) {
+        // loop and set session
+        foreach ($data as $key => $value) {
+            $_SESSION[$key] = $value;
+        }
+
         return;
     }
 
     // if key doesnt exist
-    if(!isset($_SESSION[$x])) {
+    if(!isset($_SESSION[$data])) {
         return false;
     }
 
     // session($key) | get session
-    return $_SESSION[$x];
+    return $_SESSION[$data];
+}
+
+/**
+ * Same as @include
+ *
+ * Includes a component to html
+ */
+if (!function_exists('component')) {
+    function component(string $path, array $data = [])
+    {
+        extract($data);
+        return require_once 'App/Views/' . str_replace('.', '/', $path) . '.view.php';
+    }
+}
+
+/**
+ * Verify csrf token
+ */
+if (!function_exists('verifyCsrf')) {
+    function verifyCsrf(string $hash)
+    {
+        if ($_SESSION['csrf_lifespan'] < time()
+                || !hash_equals(session('csrf_token'), $hash)
+            ) {
+            session(['error' => 'csrf token didnt match.']);
+            return redirect()->back();
+        };
+
+        unset($_SESSION['csrf_token']);
+        unset($_SESSION['csrf_lifespan']);
+        return;
+    }
 }

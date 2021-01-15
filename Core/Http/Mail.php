@@ -1,6 +1,9 @@
 <?php
 namespace Http;
 
+/**
+ * Work in progress
+ */
 class Mail
 {
     private static $to;
