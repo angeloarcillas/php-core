@@ -10,64 +10,71 @@ abstract class Models
     protected $fillable;
     protected $key = 'id';
 
-    public function query($sql, $params)
+    // query raw sql
+    public function query(string $sql, array $params)
     {
-        return $this->execute()->query($sql, $params);
+        return $this->conn()->rawQuery($sql, $params);
     }
 
-    public function create(array $params): bool
+    // insert data
+    public function save(array $params): bool
     {
-        $params = array_filter($params,
-            fn($value, $key) => in_array($key, $this->fillable)
-            , ARRAY_FILTER_USE_BOTH);
-
-        $columns = implode(',', array_keys($params));
-        $values = trim(str_repeat('?,', count($params)), ',');
-        $sql = sprintf('INSERT INTO %s (%s) VALUES (%s)',
-            $this->table, $columns, $values);
-
-        return $this->execute()->query($sql, array_values($params));
+        $params = $this->filter($params);
+        return $this->conn()->insert($this->table, $params);
     }
 
+    // update data
     public function update($id, $params, $key = null)
     {
-        $this->key = $key ?? $this->key;
+        $this->key = $key ?? [$this->key => $id];
 
-        $params = array_filter($params,
-            fn($value, $key) => in_array($key, $this->fillable)
-            , ARRAY_FILTER_USE_BOTH);
-        $set = trim(implode('=?,', array_keys($params)) . '=?', ',');
-        $sql = sprintf('UPDATE %s SET %s WHERE %s = ?',
-            $this->table, $set, $this->key);
+        $params = $this->filter($params);
 
-        $params[$this->key] = $id;
-        return $this->execute()->query($sql, array_values($params));
+        return $this->conn()->update($this->table, $key, $params);
     }
 
+    // delete data
     public function delete($id, $key = null)
     {
-        $this->key = $key ?? $this->key;
-        $sql = sprintf('DELETE FROM %s WHERE %s = ?',
-            $this->table, $this->key);
+        $this->key = $key ?? [$this->key => $id];
 
-        return $this->execute()->query($sql, [$id]);
+        return $this->conn()->delete($this->table, $id);
     }
 
-    public function find(string $param, $key = null): bool|object
+    // find 1 data
+    public function find(string $params, $key = null): bool|object
     {
         $this->key = $key ?? $this->key;
+
         $sql = sprintf('SELECT * FROM %s WHERE %s = ?',
             $this->table, $this->key);
-        return $this->execute()->select($sql, [$param]);
+
+        return $this->conn()->rawSelect($sql, [$params]);
     }
 
-    public function all(array $params = []): array
+    // return all data
+    public function all(?string $table = null): array
     {
-        $sql = sprintf('SELECT * FROM %s', $this->table);
-        return $this->execute()->selectAll($sql, $params);
+        $this->table = $table ?? $this->table;
+
+        return $this->conn()->selectAll($this->table);
     }
 
-    private function execute()
+    // public function count()
+    // {
+    //     return $this->conn()->rowCount()
+    // }
+
+    // filter request and fillable
+    protected function filter($params)
+    {
+        return array_filter($params,
+            fn($x, $key) => in_array($key, $this->fillable)
+            , ARRAY_FILTER_USE_BOTH);
+    }
+
+    // create connection instance
+    private function conn()
     {
         return new QueryBuilder();
     }

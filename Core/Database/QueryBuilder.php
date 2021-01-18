@@ -54,6 +54,40 @@ final class QueryBuilder extends Connection
         return $this->query($sql, $params, 'fetchAll', true);
     }
 
+    // Do insert sql
+    public function insert(string $table, array $params)
+    {
+        $columns = implode(',', array_keys($params));
+        $values = trim(str_repeat('?,', count($params)), ',');
+
+        $sql = sprintf('INSERT INTO %s (%s) VALUES (%s)',
+            $table, $columns, $values);
+        return $this->query($sql, $params);
+    }
+
+    // do update sql
+    public function update(string $table, array $key, array $params)
+    {
+        $set = trim(implode('=?,', array_keys($params)) . '=?', ',');
+
+        $sql = sprintf('UPDATE %s SET %s WHERE %s = ?',
+            $table, $set, array_keys($key));
+
+        array_push($params, $key);
+        return $this->query($sql, $params);
+    }
+
+    // do delete sql
+    public function delete(string $table, array $key, array $params = [])
+    {
+        $sql = sprintf('DELETE FROM %s WHERE %s = ?',
+            $table, array_keys($key)
+        );
+
+        array_push($params, $key);
+        $this->query($sql, $params);
+    }
+
     /**
      * Select from database
      *
@@ -88,17 +122,18 @@ final class QueryBuilder extends Connection
         return $this->query($sql, fetchType:'FetchAll');
     }
 
-    /**
-     * Count all rows from database
-     *
-     * @param string $sql
-     * @param array $params
-     * @return int
-     */
-    public function rowCount(string $sql, array $params = []): int
-    {
-        return $this->query($sql, $params, 'fetchAll', count:true);
-    }
+    // /**
+    //  * Count all rows from database
+    //  *
+    //  * @param string $sql
+    //  * @param array $params
+    //  * @return int
+    //  */
+    // public function rowCount(string $sql, array $params = []): int
+    // {
+    //     $sql = "SELECT * FROM %s";
+    //     return $this->query($sql, $params, 'fetchAll', count:true);
+    // }
 
     private function connection()
     {
