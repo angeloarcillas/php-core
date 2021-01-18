@@ -5,6 +5,10 @@ class QueryBuilder extends Connection
 {
 
     // private object $conn;
+    protected $where;
+    protected $sql;
+    protected $parameters;
+
 
     /**
      * Start buffer then establish connection
@@ -31,9 +35,37 @@ class QueryBuilder extends Connection
      * @param array $params
      * @return bool
      */
-    public function query(string $sql, array $params = []): bool
+    public function rawQuery(string $sql, array $params = []): bool
     {
         return $this->connection()->prepare($sql)->execute($params);
+    }
+
+    /**
+     * Query from database
+     *
+     * @param string $sql
+     * @param array $params
+     * @return bool
+     */
+    public function rawSelect(string $sql, array $params = []): bool
+    {
+        $stmt = $this->connection()->prepare($sql);
+        $stmt = $stmt->execute($params);
+        return $stmt->fetch();
+    }
+
+    /**
+     * Query from database
+     *
+     * @param string $sql
+     * @param array $params
+     * @return bool
+     */
+    public function rawSelectAll(string $sql, array $params = []): bool
+    {
+        $stmt = $this->connection()->prepare($sql);
+        $stmt = $stmt->execute($params);
+        return $stmt->fetchAll();
     }
 
     /**
