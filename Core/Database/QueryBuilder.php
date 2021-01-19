@@ -4,7 +4,7 @@ namespace Core\Database;
 final class QueryBuilder extends Connection
 {
 
-    public $validFetchType = ['fetch', 'fetchAll'];
+   public $validFetchType = ['fetch', 'fetchAll'];
 
     /**
      * Raw SQL query from database
@@ -25,7 +25,7 @@ final class QueryBuilder extends Connection
      * @param array $params
      * @return bool
      */
-    public function rawSelect(string $sql, array $params = []): bool|object
+    public function rawSelect(string $sql, array $params = [])
     {
         return $this->query($sql, $params, 'fetch');
     }
@@ -69,23 +69,21 @@ final class QueryBuilder extends Connection
     public function update(string $table, array $key, array $params)
     {
         $set = trim(implode('=?,', array_keys($params)) . '=?', ',');
-
         $sql = sprintf('UPDATE %s SET %s WHERE %s = ?',
-            $table, $set, array_keys($key));
+            $table, $set, key($key));
 
-        array_push($params, $key);
+        $params[] = current($key);
         return $this->query($sql, $params);
     }
 
     // do delete sql
-    public function delete(string $table, array $key, array $params = [])
+    public function delete(string $table, string $key, string|int $param)
     {
         $sql = sprintf('DELETE FROM %s WHERE %s = ?',
-            $table, array_keys($key)
+            $table, $key
         );
 
-        array_push($params, $key);
-        $this->query($sql, $params);
+        return $this->query($sql, [$param]);
     }
 
     /**
@@ -95,14 +93,14 @@ final class QueryBuilder extends Connection
      * @param array $params
      * @return bool|object
      */
-    public function select(string $table, array $params = ['*']): bool | object
+    public function select(string $table, string $column, string $param)
     {
-        $sql = sprintf("SELECT %s FROM %s",
-            implode(',', $params),
-            $table
+        $sql = sprintf("SELECT * FROM %s WHERE %s = ?",
+            $table,
+            $column
         );
 
-        return $this->query($sql, $params, 'fetch');
+        return $this->query($sql, [$param], 'fetch');
     }
 
     /**
@@ -112,14 +110,14 @@ final class QueryBuilder extends Connection
      * @param array $params
      * @return bool|object
      */
-    public function selectAll(string $table, array $params = ['*']): array
+    public function selectAll(string $table, array $columns = ['*']): array
     {
         $sql = sprintf("SELECT %s FROM %s",
-            implode(',', $params),
+            implode(',', $columns),
             $table
         );
 
-        return $this->query($sql, fetchType:'FetchAll');
+        return $this->query($sql, fetchType:'fetchAll');
     }
 
     // /**
@@ -148,8 +146,7 @@ final class QueryBuilder extends Connection
     ) {
         $stmt = $this->connection()->prepare($sql);
 
-        $params = array_keys($params);
-
+        $params = array_values($params);
         if (!$fetchType) {
             return $stmt->execute($params);
         }

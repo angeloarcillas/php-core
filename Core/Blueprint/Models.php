@@ -11,45 +11,52 @@ abstract class Models
     protected $key = 'id';
 
     // query raw sql
-    public function query(string $sql, array $params)
+    public function rawQeury(string $sql, array $params)
     {
-        return $this->conn()->rawQuery($sql, $params);
+        return $this->build()->rawQuery($sql, $params);
+    }
+
+    // query raw select sql
+    public function rawSelectQuery(string $sql, array $params)
+    {
+        return $this->build()->rawSelect($sql, $params);
+    }
+
+    // query raw select all sql
+    public function rawSelectAllQuery(string $sql, array $params)
+    {
+        return $this->build()->rawSelectAll($sql, $params);
     }
 
     // insert data
-    public function save(array $params): bool
+    public function create(array $params): bool
     {
         $params = $this->filter($params);
-        return $this->conn()->insert($this->table, $params);
+        return $this->build()->insert($this->table, $params);
     }
 
     // update data
     public function update($id, $params, $key = null)
     {
-        $this->key = $key ?? [$this->key => $id];
-
+        $key = $key ? [$key => $id] : [$this->key => $id];
         $params = $this->filter($params);
 
-        return $this->conn()->update($this->table, $key, $params);
+        return $this->build()->update($this->table, $key, $params);
     }
 
     // delete data
     public function delete($id, $key = null)
     {
-        $this->key = $key ?? [$this->key => $id];
-
-        return $this->conn()->delete($this->table, $id);
+        $key = $key ?? $this->key;
+        return $this->build()->delete($this->table, $key, $id);
     }
 
     // find 1 data
-    public function find(string $params, $key = null): bool|object
+    public function find(string $param, ?string $key = null, ?string $table = null)
     {
-        $this->key = $key ?? $this->key;
-
-        $sql = sprintf('SELECT * FROM %s WHERE %s = ?',
-            $this->table, $this->key);
-
-        return $this->conn()->rawSelect($sql, [$params]);
+        $table = $table ?? $this->table;
+        $key = $key ?? $this->key;
+        return $this->build()->select($table, $key, $param);
     }
 
     // return all data
@@ -57,7 +64,7 @@ abstract class Models
     {
         $this->table = $table ?? $this->table;
 
-        return $this->conn()->selectAll($this->table);
+        return $this->build()->selectAll($this->table);
     }
 
     // public function count()
@@ -73,8 +80,8 @@ abstract class Models
             , ARRAY_FILTER_USE_BOTH);
     }
 
-    // create connection instance
-    private function conn()
+    // create QueryBuilder instance
+    private function build()
     {
         return new QueryBuilder();
     }
