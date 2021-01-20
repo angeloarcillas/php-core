@@ -6,83 +6,137 @@ use Core\Database\QueryBuilder;
 
 abstract class Models
 {
+  // set sql table
     protected $table;
+
+    // set valid columns
     protected $fillable;
+
+    // set where key
     protected $key = 'id';
 
-    // query raw sql
-    public function rawQeury(string $sql, array $params)
+    /**
+     * Raw sql
+     */
+    public function rawQuery(string $sql, array $params = []): bool
     {
-        return $this->build()->rawQuery($sql, $params);
+        // execute raw sql
+        return $this->builder()->rawQuery($sql, $params);
     }
 
-    // query raw select sql
-    public function rawSelectQuery(string $sql, array $params)
+    /**
+     * Raw select sql
+     *
+     * return 1 data
+     */
+    public function rawSelectQuery(string $sql, array $params = []): bool|object
     {
-        return $this->build()->rawSelect($sql, $params);
+        // execute raw select sql
+        return $this->builder()->rawSelect($sql, $params);
     }
 
-    // query raw select all sql
-    public function rawSelectAllQuery(string $sql, array $params)
+    /**
+     * Raw select all query
+     *
+     * return all
+     */
+    public function rawSelectAllQuery(string $sql, array $params = []): array
     {
-        return $this->build()->rawSelectAll($sql, $params);
+        // execute raw select all sql
+        return $this->builder()->rawSelectAll($sql, $params);
     }
 
-    // insert data
+    /**
+     * Query for INSERT sql
+     */
     public function create(array $params): bool
     {
+        // filter request with $fillable
         $params = $this->filter($params);
-        return $this->build()->insert($this->table, $params);
+
+        // execute insert sql
+        return $this->builder()->insert($this->table, $params);
     }
 
-    // update data
-    public function update($id, $params, $key = null)
+    /**
+     * Query for UPDATE sql
+     */
+    public function update($id, $params, $key = null): bool
     {
+        // check if user defined a key
         $key = $key ? [$key => $id] : [$this->key => $id];
+
+        // filter request with $fillable
         $params = $this->filter($params);
 
-        return $this->build()->update($this->table, $key, $params);
+        // execute update sql
+        return $this->builder()->update($this->table, $key, $params);
     }
 
-    // delete data
-    public function delete($id, $key = null)
+    /**
+     * Query for DELETE sql
+     */
+    public function delete($id, $key = null): bool
     {
+        // check if user defined a key
         $key = $key ?? $this->key;
-        return $this->build()->delete($this->table, $key, $id);
+
+        // run delete sql
+        return $this->builder()->delete($this->table, $key, $id);
     }
 
-    // find 1 data
-    public function find(string $param, ?string $key = null, ?string $table = null)
-    {
+    /**
+     * Return specific data from table
+     */
+    public function find(
+        string $param,
+        ?string $key = null,
+        ?string $table = null
+    ): bool|object {
+        // check if user defined a table
         $table = $table ?? $this->table;
+
+        // check if user defined a key
         $key = $key ?? $this->key;
-        return $this->build()->select($table, $key, $param);
+
+        // execute select sql
+        return $this->builder()->select($table, $key, $param);
     }
 
-    // return all data
+    /**
+     * Return all data from table
+     */
     public function all(?string $table = null): array
     {
+        // check if user defined a table
         $this->table = $table ?? $this->table;
 
-        return $this->build()->selectAll($this->table);
+        // execute select all sql
+        return $this->builder()->selectAll($this->table);
     }
 
-    // public function count()
-    // {
-    //     return $this->conn()->rowCount()
-    // }
-
-    // filter request and fillable
-    protected function filter($params)
+    /**
+     * Filter $request with $this->fillable
+     *
+     * Return all request that can be filled
+     */
+    protected function filter($params): array
     {
-        return array_filter($params,
-            fn($x, $key) => in_array($key, $this->fillable)
-            , ARRAY_FILTER_USE_BOTH);
+        return array_filter(
+            // request
+            $params,
+
+            // arrow function | return fillable requests
+            fn ($x, $key) => in_array($key, $this->fillable),
+
+            // use array keys & values
+            ARRAY_FILTER_USE_BOTH
+        );
     }
 
-    // create QueryBuilder instance
-    private function build()
+    // create Querybuilderer instance
+    private function builder()
     {
-        return new QueryBuilder();
+        return new Querybuilder();
     }
 }
