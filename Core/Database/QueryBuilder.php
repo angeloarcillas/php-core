@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\Database;
 
 final class QueryBuilder extends Connection
@@ -68,7 +69,9 @@ final class QueryBuilder extends Connection
 
         $sql = sprintf(
             'INSERT INTO %s (%s) VALUES (%s)',
-            $table, $columns, $values
+            $table,
+            $columns,
+            $values
         );
 
         return $this->query($sql, $params);
@@ -102,7 +105,8 @@ final class QueryBuilder extends Connection
     {
         $sql = sprintf(
             'DELETE FROM %s WHERE %s = ?',
-            $table, $key
+            $table,
+            $key
         );
 
         return $this->query($sql, [$param]);
@@ -188,4 +192,5 @@ final class QueryBuilder extends Connection
 
         // return fetched result
         return $result;
+    }
 }
