@@ -127,7 +127,7 @@ abstract class Models
             $params,
 
             // arrow function | return fillable requests
-            fn ($x, $key) => in_array($key, $this->fillable),
+            fn ($_x, $key) => in_array($key, $this->fillable),
 
             // use array keys & values
             ARRAY_FILTER_USE_BOTH

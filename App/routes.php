@@ -1,3 +1,5 @@
 <?php
 
-$router->get('/', fn() => view('welcome'));
+$router->get('/', function() {
+  echo "hit";
+});

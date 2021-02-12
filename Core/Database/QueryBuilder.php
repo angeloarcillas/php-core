@@ -82,14 +82,17 @@ final class QueryBuilder extends Connection
      */
     public function update(string $table, array $key, array $params)
     {
+        // columns
+        $keys = array_keys($params);
+
         // set columns to update
-        $set = trim(implode('=?,', array_keys($params)) . '=?', ',');
+        $set = trim(implode('=?,', $keys) . '=?', ',');
 
         $sql = sprintf(
             'UPDATE %s SET %s WHERE %s = ?',
             $table,
             $set,
-            key($key)
+            key($key) // get array key
         );
 
         // append key value
@@ -148,12 +151,6 @@ final class QueryBuilder extends Connection
         return $this->query($sql, fetchType: 'fetchAll');
     }
 
-    // Establish connection
-    private function connection()
-    {
-        return parent::connect(CONFIG['database']);
-    }
-
     /**
      * Execute query
      */
@@ -192,5 +189,11 @@ final class QueryBuilder extends Connection
 
         // return fetched result
         return $result;
+    }
+
+    // Establish connection
+    private function connection()
+    {
+        return parent::connect(CONFIG['database']);
     }
 }

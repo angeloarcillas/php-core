@@ -2,6 +2,7 @@
 namespace Http;
 
 /**
+ * ! USE PHPMailer
  * Work in progress
  */
 class Mail
@@ -46,7 +47,7 @@ class Mail
     public static function view($file)
     {
         // TODO: fix on live server
-        self::$message = view("mail/{$file}");
+        self::$message = file_get_contents("mail/{$file}");
         return new self;
     }
 
