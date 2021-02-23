@@ -85,6 +85,15 @@ trait Validator
         }
     }
 
+    // test
+    protected function same($request, $value)
+    {
+        if ($_REQUEST[$value] !== $request) {
+            $this->error("$this->input and $value must match");
+        }
+
+    }
+
     /**
      * set session errors
      */
