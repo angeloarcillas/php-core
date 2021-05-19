@@ -14,7 +14,7 @@ use Core\Http\Request;
 use Core\Http\Router;
 
 // import autoloader
-require 'autoload.php';
+require 'autoloader.php';
 
 // import helper functions
 require 'Core/helper.php';
