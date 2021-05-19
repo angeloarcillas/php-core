@@ -23,7 +23,7 @@ class Router
      *
      * TODO: implement cache?
      */
-    protected $routes = [
+    protected array $routes = [
         "GET" => [],
         "POST" => [],
         "PUT" => [],
@@ -33,12 +33,12 @@ class Router
     /**
      *  Set routes attribute container
      */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     /**
      *  Set regex pattern for routes with wildcars
      */
-    protected $patterns = [
+    protected array $patterns = [
         // any numbers
         ":int" => "(\d+)",
         // any letters
