@@ -239,7 +239,7 @@ class Router
     /**
      * Redirect back to previous url
      */
-    public function back()
+    public function back(): void
     {
         // check if previous uri exist
         if (isset($_SERVER["HTTP_REFERER"])) {
