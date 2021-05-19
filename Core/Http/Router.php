@@ -244,7 +244,8 @@ class Router
         // check if previous uri exist
         if (isset($_SERVER["HTTP_REFERER"])) {
             // redirect to previous url
-            return header("location: {$_SERVER["HTTP_REFERER"]}", true, 302);
+            header("location: {$_SERVER["HTTP_REFERER"]}", true, 302);
+            exit;
         }
     }
 }
