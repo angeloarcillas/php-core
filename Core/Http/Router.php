@@ -224,15 +224,17 @@ class Router
         // create object
         $object = new $class();
 
+        // if no method then use __invoke
+        $action = $action ?? "__invoke";
+
         // check if method doesn't exist
-        if (!method_exists($object, $action)) {
-            $action = $action ?? "__invoke";
+        if (!method_exists($object::class, $action)) {
             throw new Exception("
                 Method: \"{$action}()\" is not defined on {$class}.
             ");
         }
 
-        // call method from controller class
+        // call method from controller class with params
         return $object->$action(...$this->attributes);
     }
 

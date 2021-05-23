@@ -6,5 +6,8 @@ use App\Models\User;
 
 class UserController
 {
-
+  public function __invoke()
+  {
+    dd("hit");
+  }
 }
