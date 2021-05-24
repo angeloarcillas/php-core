@@ -15,7 +15,7 @@ $router->get('/', function () {
 
   // // UPDATE
   // $res = $user->update(1,['email' => 'changed@mail.com']);
-  
+
   // // UPDATE - string id & more than 1 field
   // $res = $user->update('1',[
   //   'email' => 'string.changed@mail.com',
@@ -28,8 +28,12 @@ $router->get('/', function () {
   // // DELETE - string id
   // $res = $user->delete('2');
 
-  // SELECT
-  $res = $user->select(4);
+  // // SELECT
+  // $res = $user->select(4);
+
+  // SELECT - string id
+  $res = $user->select('5');
+
 
   dd($res);
 });
