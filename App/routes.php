@@ -16,10 +16,10 @@ $router->get('/', function () {
   // // UPDATE
   // $res = $user->update(1,['email' => 'changed@mail.com']);
   
-  // UPDATE
-  $res = $user->update(1,[
-    'email' => 'changed@mail.com',
-    'password' => 'changed password'
+  // UPDATE - string id & more than 1 field
+  $res = $user->update('1',[
+    'email' => 'string.changed@mail.com',
+    'password' => 'string changed password'
     ]);
 
 
