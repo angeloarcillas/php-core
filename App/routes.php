@@ -22,8 +22,11 @@ $router->get('/', function () {
   //   'password' => 'string changed password'
   //   ]);
 
-  // DELETE
-  $res = $user->delete(1);
+  // // DELETE
+  // $res = $user->delete(1);
+
+  // DELETE - string id
+  $res = $user->delete('2');
 
   dd($res);
 });
