@@ -122,10 +122,10 @@ abstract class Models extends QueryBuilder
      * @return mixed
      */
     public function select(
-        string|int $id, 
-        ?string $key = null, 
+        string|int $id,
+        ?string $key = null,
         ?string $table = null
-        ): mixed {
+    ): mixed {
         $sql = sprintf(
             "SELECT * FROM %s WHERE %s = ? LIMIT 1",
             // check if user defined a table
@@ -144,7 +144,7 @@ abstract class Models extends QueryBuilder
      * @param array $columns
      * @return array
      */
-    public function selectAll(?string $table, array $columns = ['*']): array
+    public function selectAll(array $columns = ['*'], ?string $table = null): array
     {
         $sql = sprintf(
             "SELECT %s FROM %s",

@@ -31,9 +31,14 @@ $router->get('/', function () {
   // // SELECT
   // $res = $user->select(4);
 
-  // SELECT - string id
-  $res = $user->select('5');
+  // // SELECT - string id
+  // $res = $user->select('5');
 
+  // SELECT ALL
+  $res = $user->selectAll();
+
+  // SELECT ALL - specific column
+  $res = $user->selectAll(columns: ['email']);
 
   dd($res);
 });
