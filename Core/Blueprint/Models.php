@@ -100,7 +100,7 @@ abstract class Models extends QueryBuilder
      * @param null|string $key
      * @return bool
      */
-    public function delete(string|int $id, ?string $key): bool
+    public function delete(string|int $id, ?string $key = null): bool
     {
         // sql statement
         $sql = sprintf(
