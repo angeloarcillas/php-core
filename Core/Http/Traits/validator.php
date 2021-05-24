@@ -50,7 +50,7 @@ trait Validator
         foreach ($fields as $key => $rules) {
             // check if the user didnt define an input name or a rule
             if (!is_string($key)) {
-                return throw new Exception("Request \"{$rules}\" is missing a field or a rule");
+                throw new Exception("Request \"{$rules}\" is missing a field or a rule");
             }
 
             // field value
@@ -61,7 +61,7 @@ trait Validator
 
             // check if the current request exists
             if (!isset($value)) {
-                return throw new Exception("request field \"{$this->input}\" doesn't exists.");
+                throw new Exception("request field \"{$this->input}\" doesn't exists.");
             }
 
             // if "required|min:6|max:255"  (string with `|`)
@@ -77,8 +77,8 @@ trait Validator
                 [$rule, $parameter] = [...explode(':', $rules[$i]), null];
 
                 // check if rule doesn't exists
-                if (!method_exists($this, $rule)) {
-                    return throw new Exception("Rule \"{$rule}\" doesnt exists");
+                if (!method_exists($this::class, $rule)) {
+                    throw new Exception("Rule \"{$rule}\" doesnt exists");
                 }
 
                 // execute rule
@@ -94,7 +94,7 @@ trait Validator
 
         // if has error redirect back
         // else return all validated fields
-        return !$hasError ? $validated : redirect()->back();
+        return ($hasError) ? redirect()->back() : $validated;
     }
 
 
@@ -131,12 +131,12 @@ trait Validator
     protected function min(string  $request, string $value)
     {
         // check if value has non numeric character
-        if (preg_match('/[^0-9]/', $value)) {
-            return throw new Exception("Rule \"min\" must not contain a non numerical value.");
+        if ($this->isNumeric($value)) {
+            throw new Exception("Rule \"min\" must not contain a non numerical value.");
         }
 
         // check if input value is less than min rule value
-        if (strlen($request) < $value) {
+        if (strlen($request) < (int) $value) {
             $this->error("{$this->input} is too short. min of {$value}");
         }
     }
@@ -151,12 +151,12 @@ trait Validator
     protected function max(string $request, string $value)
     {
         // check if value has non numeric character
-        if (preg_match('/[^0-9]/', $value)) {
-            return throw new Exception("Rule \"max\" must not contain a non numerical value.");
+        if ($this->isNumeric($value)) {
+            throw new Exception("Rule \"max\" must not contain a non numerical value.");
         }
 
         // check if input value is greater than max rule value
-        if (strlen($request) > $value) {
+        if (strlen($request) > (int) $value) {
             $this->error("{$this->input} is too long. max of {$value}");
         }
     }
@@ -168,16 +168,9 @@ trait Validator
      */
     protected function email($request)
     {
-
-        // sanitize email
-        $sanitizedEmail = filter_var($request, FILTER_SANITIZE_EMAIL);
-        // validate email
-        $isFilterEmail = filter_var($sanitizedEmail, FILTER_VALIDATE_EMAIL);
-        // 3-50 char/. @ 2-12 char . 2-8 char | example.123@mail.com
-        $isRegexEmail = preg_match('/^[\w\.]{3,50}@\w{2,12}\.\w{2,8}$/', $sanitizedEmail);
-
+        // dd(!$this->isEmail($request));
         // validate if valid email syntax
-        if (!$isFilterEmail || !$isRegexEmail) {
+        if (!$this->isEmail($request)) {
             $this->error("invalid email format");
         }
     }
@@ -209,6 +202,35 @@ trait Validator
         if ($request !== $confirm) {
             $this->error("{$this->input} and confirm {$this->input} didn't match");
         }
+    }
+
+    /**
+     * Check if string $value only contains numeric value
+     * 
+     * @param string $value
+     * @return bool
+     */
+    public function isNumeric(string $value): bool
+    {
+        return preg_match('/[^0-9]/', $value);
+    }
+
+    /**
+     * Check if $value is an email
+     * 
+     * @param string $email
+     * @return bool
+     */
+    public function isEmail(string $email): bool
+    {
+        // sanitize email
+        $sanitizedEmail = filter_var($email, FILTER_SANITIZE_EMAIL);
+        // validate email
+        $isFilterValidEmail = filter_var($sanitizedEmail, FILTER_VALIDATE_EMAIL);
+        // 3-50 char/. @ 2-12 char . 2-8 char | example.123@mail.com
+        $isRegexValidEmail = preg_match('/^[\w\.]{3,50}@\w{2,12}\.\w{2,8}$/', $sanitizedEmail);
+        // validate if valid email syntax
+        return ($isFilterValidEmail && $isRegexValidEmail);
     }
 
     /**
