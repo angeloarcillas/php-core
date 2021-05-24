@@ -8,6 +8,6 @@ class User extends Models
 {
     protected ?string $table = 'users';
     protected array $fillable = ['email', 'password'];
-    protected string $key = 'email';
+    protected string $key = 'id';
 
 }

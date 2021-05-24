@@ -65,7 +65,7 @@ abstract class Models extends QueryBuilder
      * @param null|string $key
      * @return bool
      */
-    public function update(string|int $id, array $params, ?string $key): bool
+    public function update(string|int $id, array $params, ?string $key = null): bool
     {
         // filter request with $fillable
         $params = $this->filter($params);
