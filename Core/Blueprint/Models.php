@@ -161,6 +161,14 @@ abstract class Models extends QueryBuilder
     }
 
     /**
+     * Test count param of query
+     */
+    public function testRawCount(string $sql): int
+    {
+      return $this->rawCount(sql: $sql);  
+    }
+
+    /**
      * Filter $request with $this->fillable
      * Returns all request that can be filled
      * 

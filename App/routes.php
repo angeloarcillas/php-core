@@ -4,13 +4,13 @@ use \Core\Http\Request;
 
 use \App\Models\User;
 
-$router->get('/', function () {
-  dd(request()->validate([
-    'name' => 'email'
-  ]), $_SESSION);
-});
+// $router->get('/', function () {
+//   dd(request()->validate([
+//     'name' => 'email'
+//   ]), $_SESSION);
+// });
 
-// TEST MODEL & DATABASE
+// // TEST MODEL & DATABASE
 // $router->get('/', function () {
 //   $user = new User();
 
@@ -49,3 +49,8 @@ $router->get('/', function () {
 
 //   dd($res);
 // });
+
+$router->get('/', function () {
+  $user = new User();
+  dd($user->testRawCount("UPDATE users SET email = 'asfs' WHERE id IN (4,5,6)"));
+});

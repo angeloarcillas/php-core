@@ -57,7 +57,7 @@ abstract class QueryBuilder extends Connection
      */
     protected function rawCount(string $sql, array $params = []): int
     {
-        return $this->query(sql: $sql, params: $params, fetchType: 'fetchAll', count: true);
+        return $this->query(sql: $sql, params: $params, count: true);
     }
 
     /**
@@ -81,10 +81,14 @@ abstract class QueryBuilder extends Connection
         // get parameters
         $params = array_values($params);
 
-        // if no fetch type then execute
-        if (!$fetchType) {
-            return $stmt->execute($params);
+        // if count, return the number of row selected
+        if ($count) {
+            $stmt->execute($params);
+            return $stmt->rowCount();
         }
+
+        // if no fetch type then execute
+        if (!$fetchType) return $stmt->execute($params);
 
         // if invalid fetch type, throw error
         if (!in_array($fetchType, $this->validFetchType)) {
@@ -97,10 +101,6 @@ abstract class QueryBuilder extends Connection
         // fetch from database
         $result = $stmt->{$fetchType}();
 
-        // if count, return numbe of row fetched
-        if ($count) {
-            return $result->rowCount();
-        }
 
         // return fetched result
         return $result;
