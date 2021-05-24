@@ -121,8 +121,11 @@ abstract class Models extends QueryBuilder
      * @param null|string $table
      * @return mixed
      */
-    public function select(string|int $id, ?string $key, ?string $table): mixed
-    {
+    public function select(
+        string|int $id, 
+        ?string $key = null, 
+        ?string $table = null
+        ): mixed {
         $sql = sprintf(
             "SELECT * FROM %s WHERE %s = ? LIMIT 1",
             // check if user defined a table

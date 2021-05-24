@@ -9,8 +9,8 @@ $router->get('/', function () {
 
   // // CREATE
   // $res = $user->insert([
-  //   'email' => 'sample@mail.com',
-  //   'password' => 'password'
+  //   'email' => 'sample3@mail.com',
+  //   'password' => 'password3'
   // ]);
 
   // // UPDATE
@@ -25,8 +25,11 @@ $router->get('/', function () {
   // // DELETE
   // $res = $user->delete(1);
 
-  // DELETE - string id
-  $res = $user->delete('2');
+  // // DELETE - string id
+  // $res = $user->delete('2');
+
+  // SELECT
+  $res = $user->select(4);
 
   dd($res);
 });
