@@ -13,8 +13,15 @@ $router->get('/', function () {
   //   'password' => 'password'
   // ]);
 
+  // // UPDATE
+  // $res = $user->update(1,['email' => 'changed@mail.com']);
+  
   // UPDATE
-  $res = $user->update(1,['email' => 'changed@mail.com']);
+  $res = $user->update(1,[
+    'email' => 'changed@mail.com',
+    'password' => 'changed password'
+    ]);
+
 
   dd($res);
 });
