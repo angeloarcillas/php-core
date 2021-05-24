@@ -1,5 +1,6 @@
 <?php
 // TODO: Create a separate git branch for other none related component
+// TODO: impletement the absolute path for includes on views dir
 
 // set host url
 $router->host = 'php-core';

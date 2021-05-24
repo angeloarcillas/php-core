@@ -2,6 +2,15 @@
 
 > PHP MVC starter-template
 
+## Setup
+```
+1. setup routes on App\routes.php
+2. create a controller file on App\Controllers
+3. create a model file on App\Models
+4. setup app & database config on config.php
+5. create a view file on App\Views
+```
+
 ## Setting routes
 
 - Syntax: $router->$method($url, $controller)
@@ -67,4 +76,13 @@ $user->selectAll();
 // SELECT ALL - specific column
 $user->selectAll(columns: ['email']);
 });
+```
+
+## Using request validator
+```php
+$attributes = request()->validate([
+  'email' => 'required|min:3|max:55',
+  'password' => ['required', 'confirm', 'min:8', 'max:255']
+])
+
 ```
