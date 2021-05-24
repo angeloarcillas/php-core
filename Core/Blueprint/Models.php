@@ -10,7 +10,7 @@ abstract class Models extends QueryBuilder
     /**
      * SQL table
      */
-    protected string $table = null;
+    protected ?string $table = null;
 
     /**
      * Valid columns
@@ -20,7 +20,7 @@ abstract class Models extends QueryBuilder
     /**
      * Where key
      */
-    protected $key = 'id';
+    protected string $key = 'id';
 
     public function __construct()
     {

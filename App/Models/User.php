@@ -6,8 +6,8 @@ use Core\Blueprint\Models;
 
 class User extends Models
 {
-    protected $table = 'users';
-    protected $fillable = ['email', 'password'];
-    protected $key = 'email';
+    protected ?string $table = 'users';
+    protected array $fillable = ['email', 'password'];
+    protected string $key = 'email';
 
 }
