@@ -10,8 +10,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // import Request and Router class
-use Core\Http\Request;
-use Core\Http\Router;
+use \Core\Http\Request;
+use \Core\Http\Router;
 
 // import autoloader
 require 'autoloader.php';
