@@ -2,4 +2,5 @@
 
 use Core\Http\Request;
 
-$router->get('/', 'UserController');
+$router->get('/', function () {
+});

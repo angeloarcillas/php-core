@@ -2,141 +2,176 @@
 
 namespace Core\Blueprint;
 
-use Core\Database\QueryBuilder;
+use \Exception;
+use \Core\Database\QueryBuilder;
 
-abstract class Models
+abstract class Models extends QueryBuilder
 {
-  // set sql table
-    protected $table;
+    /**
+     * SQL table
+     */
+    protected string $table = null;
 
-    // set valid columns
-    protected $fillable;
+    /**
+     * Valid columns
+     */
+    protected array $fillable = [];
 
-    // set where key
+    /**
+     * Where key
+     */
     protected $key = 'id';
 
-    /**
-     * Raw sql
-     */
-    public function rawQuery(string $sql, array $params = []): bool
+    public function __construct()
     {
-        // execute raw sql
-        return $this->builder()->rawQuery($sql, $params);
+        if (!isset($this->table)) {
+            throw new Exception("There is no table defined.");
+        }
     }
 
     /**
-     * Raw select sql
-     *
-     * return 1 data
+     * Execute INSERT sql | CREATE
+     * 
+     * @param array $params
+     * @return bool
      */
-    public function rawSelectQuery(string $sql, array $params = []): bool|object
-    {
-        // execute raw select sql
-        return $this->builder()->rawSelect($sql, $params);
-    }
-
-    /**
-     * Raw select all query
-     *
-     * return all
-     */
-    public function rawSelectAllQuery(string $sql, array $params = []): array
-    {
-        // execute raw select all sql
-        return $this->builder()->rawSelectAll($sql, $params);
-    }
-
-    /**
-     * Query for INSERT sql
-     */
-    public function create(array $params): bool
+    public function insert(array $params): bool
     {
         // filter request with $fillable
         $params = $this->filter($params);
 
-        // execute insert sql
-        return $this->builder()->insert($this->table, $params);
+        // set column names
+        $columns = implode(',', array_keys($params));
+
+        // set column values placeholder
+        $values = trim(str_repeat('?,', count($params)), ',');
+
+        // sql statement
+        $sql = sprintf(
+            'INSERT INTO %s (%s) VALUES (%s)',
+            $this->table,
+            $columns,
+            $values
+        );
+
+        return $this->rawQuery($sql, $params);
     }
 
     /**
-     * Query for UPDATE sql
+     * Execute UPDATE sql | UPDATE
+     * 
+     * @param string|int $id
+     * @param array $params
+     * @param null|string $key
+     * @return bool
      */
-    public function update($id, $params, $key = null): bool
+    public function update(string|int $id, array $params, ?string $key): bool
     {
+        // filter request with $fillable
+        $params = $this->filter($params);
+
+        // set column names
+        $keys = array_keys($params);
+
+        // set column values placeholder
+        $set = trim(implode('=?,', $keys) . '=?', ',');
+
         // check if user defined a key
         $key = $key ? [$key => $id] : [$this->key => $id];
 
-        // filter request with $fillable
-        $params = $this->filter($params);
+        // sql statement
+        $sql = sprintf(
+            'UPDATE %s SET %s WHERE %s = ?',
+            $this->table,
+            $set,
+            key($key) // get $key key
+        );
 
-        // execute update sql
-        return $this->builder()->update($this->table, $key, $params);
+        // append $key value
+        $params[] = current($key);
+
+        return $this->rawQuery($sql, $params);
     }
 
     /**
-     * Query for DELETE sql
+     * Execute DELETE sql | DELETE
+     * 
+     * @param string|int $id
+     * @param null|string $key
+     * @return bool
      */
-    public function delete($id, $key = null): bool
+    public function delete(string|int $id, ?string $key): bool
     {
-        // check if user defined a key
-        $key = $key ?? $this->key;
+        // sql statement
+        $sql = sprintf(
+            'DELETE FROM %s WHERE %s = ?',
+            $this->table,
+            // check if user defined a key
+            $key ?? $this->key
+        );
 
-        // run delete sql
-        return $this->builder()->delete($this->table, $key, $id);
+        return $this->rawQuery(sql: $sql, params: [$id]);
     }
 
     /**
-     * Return specific data from table
+     * Select 1 row from database | READ
+     *
+     * @param string|int $id
+     * @param null|string $key
+     * @param null|string $table
+     * @return mixed
      */
-    public function find(
-        string $param,
-        ?string $key = null,
-        ?string $table = null
-    ): bool|object {
-        // check if user defined a table
-        $table = $table ?? $this->table;
-
-        // check if user defined a key
-        $key = $key ?? $this->key;
-
-        // execute select sql
-        return $this->builder()->select($table, $key, $param);
-    }
-
-    /**
-     * Return all data from table
-     */
-    public function all(?string $table = null): array
+    public function select(string|int $id, ?string $key, ?string $table): mixed
     {
-        // check if user defined a table
-        $this->table = $table ?? $this->table;
+        $sql = sprintf(
+            "SELECT * FROM %s WHERE %s = ? LIMIT 1",
+            // check if user defined a table
+            $table ?? $this->table,
+            // check if user defined a key
+            $key ?? $this->key
+        );
 
-        // execute select all sql
-        return $this->builder()->selectAll($this->table);
+        return $this->rawSelect($sql, [$id]);
+    }
+
+    /**
+     * Select all rows from database | READ
+     *
+     * @param null|string $table
+     * @param array $columns
+     * @return array
+     */
+    public function selectAll(?string $table, array $columns = ['*']): array
+    {
+        $sql = sprintf(
+            "SELECT %s FROM %s",
+            // set column names
+            implode(',', $columns),
+            // check if user defined a table
+            $table ?? $this->table
+        );
+
+        return $this->rawSelectAll($sql);
     }
 
     /**
      * Filter $request with $this->fillable
-     *
-     * Return all request that can be filled
+     * Returns all request that can be filled
+     * 
+     * @param array $params
+     * @return array
      */
-    protected function filter($params): array
+    protected function filter(array $params): array
     {
         return array_filter(
             // request
             $params,
 
             // arrow function | return fillable requests
-            fn ($_x, $key) => in_array($key, $this->fillable),
+            fn ($_, $key) => in_array($key, $this->fillable),
 
             // use array keys & values
             ARRAY_FILTER_USE_BOTH
         );
-    }
-
-    // create Querybuilderer instance
-    private function builder()
-    {
-        return new Querybuilder();
     }
 }

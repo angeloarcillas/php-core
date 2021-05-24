@@ -2,7 +2,7 @@
 
 namespace Core\Database;
 
-use PDO;
+use \PDO;
 
 abstract class Connection
 {
@@ -16,7 +16,7 @@ abstract class Connection
     {
         // !FIXME: configs are not sanitized
         // TODO: Check for vulnerability
-        return new \PDO(
+        return new PDO(
             $config['connection'] . ';dbname=' . $config['name'],
             $config['username'],
             $config['password'],

@@ -2,11 +2,15 @@
 
 namespace Core\Database;
 
-final class QueryBuilder extends Connection
-{
+use \Exception;
+use \Core\Database\Connection;
 
-    // set validate fetch type
-    public $validFetchType = ['fetch', 'fetchAll'];
+abstract class QueryBuilder extends Connection
+{
+    /**
+     * Valid fetch type
+     */
+    protected array $validFetchType = ['fetch', 'fetchAll'];
 
     /**
      * Raw SQL query from database
@@ -15,9 +19,9 @@ final class QueryBuilder extends Connection
      * @param array $params
      * @return bool
      */
-    public function rawQuery(string $sql, array $params = []): bool
+    protected function rawQuery(string $sql, array $params = []): bool
     {
-        return $this->query($sql, $params);
+        return $this->query(sql: $sql, params: $params);
     }
 
     /**
@@ -25,11 +29,11 @@ final class QueryBuilder extends Connection
      *
      * @param string $sql
      * @param array $params
-     * @return bool
+     * @return mixed
      */
-    public function rawSelect(string $sql, array $params = []): bool|object
+    protected function rawSelect(string $sql, array $params = []): mixed
     {
-        return $this->query($sql, $params, 'fetch');
+        return $this->query(sql: $sql, params: $params, fetchType: 'fetch');
     }
 
     /**
@@ -37,11 +41,11 @@ final class QueryBuilder extends Connection
      *
      * @param string $sql
      * @param array $params
-     * @return bool
+     * @return array
      */
-    public function rawSelectAll(string $sql, array $params = []): array
+    protected function rawSelectAll(string $sql, array $params = []): array
     {
-        return $this->query($sql, $params, 'fetchAll');
+        return $this->query(sql: $sql, params: $params, fetchType: 'fetchAll');
     }
 
     /**
@@ -49,117 +53,28 @@ final class QueryBuilder extends Connection
      *
      * @param string $sql
      * @param array $params
-     * @return bool
+     * @return int
      */
-    public function rawCount(string $sql, array $params = []): array
+    protected function rawCount(string $sql, array $params = []): int
     {
-        return $this->query($sql, $params, 'fetchAll', true);
-    }
-
-    /**
-     * Execute INSERT sql
-     */
-    public function insert(string $table, array $params)
-    {
-        // set columns of insert sql
-        $columns = implode(',', array_keys($params));
-
-        // set values of inset sql
-        $values = trim(str_repeat('?,', count($params)), ',');
-
-        $sql = sprintf(
-            'INSERT INTO %s (%s) VALUES (%s)',
-            $table,
-            $columns,
-            $values
-        );
-
-        return $this->query($sql, $params);
-    }
-
-    /**
-     * Execute UPDATE sql
-     */
-    public function update(string $table, array $key, array $params)
-    {
-        // columns
-        $keys = array_keys($params);
-
-        // set columns to update
-        $set = trim(implode('=?,', $keys) . '=?', ',');
-
-        $sql = sprintf(
-            'UPDATE %s SET %s WHERE %s = ?',
-            $table,
-            $set,
-            key($key) // get array key
-        );
-
-        // append key value
-        $params[] = current($key);
-
-        return $this->query($sql, $params);
-    }
-
-    /**
-     * Execute DELETE sql
-     */
-    public function delete(string $table, string $key, string|int $param)
-    {
-        $sql = sprintf(
-            'DELETE FROM %s WHERE %s = ?',
-            $table,
-            $key
-        );
-
-        return $this->query($sql, [$param]);
-    }
-
-    /**
-     * Select from database
-     *
-     * @param string $sql
-     * @param array $params
-     * @return bool|object
-     */
-    public function select(string $table, string $column, string|int $param)
-    {
-        $sql = sprintf(
-            "SELECT * FROM %s WHERE %s = ? LIMIT 1",
-            $table,
-            $column
-        );
-
-        return $this->query($sql, [$param], 'fetch');
-    }
-
-    /**
-     * Select all from database
-     *
-     * @param string $sql
-     * @param array $params
-     * @return bool|object
-     */
-    public function selectAll(string $table, array $columns = ['*']): array
-    {
-        $sql = sprintf(
-            "SELECT %s FROM %s",
-            implode(',', $columns), // set columns to fetch
-            $table
-        );
-
-        return $this->query($sql, fetchType: 'fetchAll');
+        return $this->query(sql: $sql, params: $params, fetchType: 'fetchAll', count: true);
     }
 
     /**
      * Execute query
+     * 
+     * @param string $sql
+     * @param array $params
+     * @param null|string $fetchType
+     * @param bool $count
+     * @return mixed
      */
     private function query(
         string $sql,
         array $params = [],
         ?string $fetchType = null,
         bool $count = false
-    ) {
+    ): mixed {
         // prepare sql
         $stmt = $this->connection()->prepare($sql);
 
@@ -173,7 +88,7 @@ final class QueryBuilder extends Connection
 
         // if invalid fetch type, throw error
         if (!in_array($fetchType, $this->validFetchType)) {
-            throw new \Exception("{$fetchType} is an invalid Fetch Type.");
+            throw new Exception("Type \"{$fetchType}\" is an invalid Fetch Type.");
         }
 
         // execute sql
