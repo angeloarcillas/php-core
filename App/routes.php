@@ -1,56 +1,13 @@
 <?php
+// TODO: Create a separate git branch for other none related component
 
-use \Core\Http\Request;
+// set host url
+$router->host = 'php-core';
 
-use \App\Models\User;
+// add valid method
+$router->addSupportedMethod('PATCH');
 
-// $router->get('/', function () {
-//   dd(request()->validate([
-//     'name' => 'email'
-//   ]), $_SESSION);
-// });
-
-// // TEST MODEL & DATABASE
-// $router->get('/', function () {
-//   $user = new User();
-
-//   // // CREATE
-//   // $res = $user->insert([
-//   //   'email' => 'sample3@mail.com',
-//   //   'password' => 'password3'
-//   // ]);
-
-//   // // UPDATE
-//   // $res = $user->update(1,['email' => 'changed@mail.com']);
-
-//   // // UPDATE - string id & more than 1 field
-//   // $res = $user->update('1',[
-//   //   'email' => 'string.changed@mail.com',
-//   //   'password' => 'string changed password'
-//   //   ]);
-
-//   // // DELETE
-//   // $res = $user->delete(1);
-
-//   // // DELETE - string id
-//   // $res = $user->delete('2');
-
-//   // // SELECT
-//   // $res = $user->select(4);
-
-//   // // SELECT - string id
-//   // $res = $user->select('5');
-
-//   // // SELECT ALL
-//   // $res = $user->selectAll();
-
-//   // // SELECT ALL - specific column
-//   // $res = $user->selectAll(columns: ['email']);
-
-//   dd($res);
-// });
-
+// set route
 $router->get('/', function () {
-  $user = new User();
-  dd($user->testRawCount("UPDATE users SET email = 'asfs' WHERE id IN (4,5,6)"));
+  return view('welcome');
 });

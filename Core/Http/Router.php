@@ -2,11 +2,11 @@
 
 namespace Core\Http;
 
-use Exception;
+use \Exception;
 
 class Router
 {
-    protected string $host = "php-core"; //? (OPTIONAL) used on xampp
+    protected string $host = "/"; //? (OPTIONAL) used on xampp
 
     /**
      *  Set controller namespace
@@ -48,22 +48,6 @@ class Router
         // any character except terminators
         ":any" => "(.+)",
     ];
-
-    public function __construct()
-    {
-        // start buffer
-        ob_start();
-    }
-
-    public function __destruct()
-    {
-        // delete $routes variable
-        unset($this->routes);
-        // delete $attributes variable
-        unset($this->attributes);
-        // flush buffer
-        ob_end_flush();
-    }
 
     /**
      * set routes
@@ -230,12 +214,21 @@ class Router
         // check if method doesn't exist
         if (!method_exists($object::class, $action)) {
             throw new Exception("
-                Method: \"{$action}()\" is not defined on {$class}.
+            Method: \"{$action}()\" is not defined on {$class}.
             ");
         }
 
         // call method from controller class with params
         return $object->$action(...$this->attributes);
+    }
+
+    /**
+     * !NOTE: Work in progress
+     * Add supported request method
+     */
+    protected function addSupportedMethod(string ...$methods): bool
+    {
+        return array_push($this->validMethods, ...$methods);
     }
 
     /**
@@ -249,5 +242,21 @@ class Router
             header("location: {$_SERVER["HTTP_REFERER"]}", true, 302);
             exit;
         }
+    }
+
+    public function __construct()
+    {
+        // start buffer
+        ob_start();
+    }
+
+    public function __destruct()
+    {
+        // delete $routes variable
+        unset($this->routes);
+        // delete $attributes variable
+        unset($this->attributes);
+        // flush buffer
+        ob_end_flush();
     }
 }
