@@ -4,6 +4,8 @@
 
 ## Setup
 ```
+req: php ^8.0
+
 1. setup routes on App\routes.php
 2. create a controller file on App\Controllers
 3. create a model file on App\Models
