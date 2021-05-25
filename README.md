@@ -1,3 +1,5 @@
+# !NOTE: NOT FULLY SECURITY TESTED and still a bit messy and not fully scalable(about 80%)
+
 # php-core
 
 > PHP MVC starter-template
@@ -88,3 +90,7 @@ $attributes = request()->validate([
 ])
 
 ```
+
+
+
+### Looking for someone who can create tests and perfomance benchmarking, feel free to contribute!
