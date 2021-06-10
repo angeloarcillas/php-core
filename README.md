@@ -1,4 +1,8 @@
+# !NOTE: NEED TO CHECK, FOUND A LOT OF ISSUE
+
 # !NOTE: NOT FULLY SECURITY TESTED and still a bit messy and not fully scalable(about 80%)
+
+# TODO: convert to package
 
 # php-core
 
