@@ -1,0 +1,19 @@
+{
+    "name": "zerexei/php-core",
+    "description": "simple mvc framework",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Zerexei\\PHPCore\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Angelo Arcillas",
+            "email": "angeloarcillas64@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
