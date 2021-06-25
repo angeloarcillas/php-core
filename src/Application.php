@@ -9,7 +9,7 @@ class Application
     /**
      * Application version
      * 
-     * @var VERSION string
+     * @var string VERSION
      */
     public const VERSION = '0.1.0';
 
