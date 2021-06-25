@@ -74,6 +74,7 @@ class Router
         $controller = self::$routes[$method][$uri] ?? null;
 
         if (is_null($controller)) {
+            Response::setStatusCode(404);
             throw new \Exception("Route {$uri} isn't defined.");
         }
 
