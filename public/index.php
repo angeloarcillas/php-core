@@ -1,6 +1,7 @@
 <?php
 
 use Zeretei\PHPCore\Application;
+use Zeretei\PHPCore\Request;
 use Zeretei\PHPCore\Router;
 
 // import autoloader
@@ -15,6 +16,7 @@ Application::init();
 // define routes
 Router::get("/", function () {
     echo "Working...";
+    ddd(Request::query());
 });
 
 // run application

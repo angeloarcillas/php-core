@@ -18,4 +18,13 @@ class Request
     {
         return strtoupper($_SERVER['REQUEST_METHOD']);
     }
+
+    public static function query($key = null)
+    {
+        // if key is null, return all get request
+        if (is_null($key)) return $_GET;
+
+        // return specific get request
+        return $_GET[$key] ?? null;
+    }
 }
