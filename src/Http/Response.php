@@ -23,7 +23,7 @@ class Response
 
     public static function isValidCode($code)
     {
-        return $code < 100 || $code >= 600;
+        return $code > 100 || $code <= 600;
     }
 
     public static function setStatusCode($code)
