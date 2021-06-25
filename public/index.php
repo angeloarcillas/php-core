@@ -12,11 +12,11 @@ require_once __DIR__ . '/../src/helpers.php';
 
 // create application
 Application::init();
+ddd(Request::uri());
 
 // define routes
 Router::get("/", function () {
     echo "Working...";
-    ddd(Request::query());
 });
 
 // run application

@@ -6,12 +6,11 @@ class Request
 {
     public static function uri()
     {
-        // sanitize url
-        $url = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
-        // remove query string
-        $baseUrl = explode('?', $url)[0];
-        // trim extra slashes then return url
-        return trim($baseUrl, '/');
+        // trimmed url
+        $url = trim($_SERVER['REQUEST_URI'], '/');
+        // url w/out query string
+        $base_url = parse_url($url, PHP_URL_PATH);
+        return $base_url;
     }
 
     public static function method()
