@@ -11,8 +11,13 @@ class UserController extends Controller
     {
         echo  "asd";
     }
-    public function index()
+    public static function index()
     {
         echo "Index";
+    }
+
+    public function show($id, $name)
+    {
+        dd($id, $name);
     }
 }

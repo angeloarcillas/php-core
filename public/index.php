@@ -20,7 +20,10 @@ Router::get("/", function () {
 });
 
 Router::get('/users', [\App\Controllers\UserController::class, 'index']);
-Router::get('/users/:int', [\App\Controllers\UserController::class, 'index']);
+Router::get('/users/:int/name/:str', function ($id, $name) {
+    dd($id, $name);
+});
+Router::get('/hero/:int/name/:str', [\App\Controllers\UserController::class, 'show']);
 
 // run application
 Application::run();

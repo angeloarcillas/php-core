@@ -37,6 +37,8 @@ class Router
         ":any" => "(.+)",
     ];
 
+    protected $attributes;
+
 
     public static function getInstance()
     {
@@ -95,7 +97,7 @@ class Router
         }
 
         if (is_callable($controller)) {
-            $controller();
+            $controller(...$this->attributes);
             exit;
         }
 
@@ -113,7 +115,7 @@ class Router
             return $this->callInvoke($class);
         }
 
-        return $class->$action();
+        return $class->$action(...$this->attributes);
     }
 
 
