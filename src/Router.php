@@ -71,7 +71,6 @@ class Router
         $uri = Request::uri();
         $method = Request::method();
 
-        $uri = trim($uri, '/');
         $controller = self::$routes[$method][$uri] ?? null;
 
         if (is_null($controller)) {
