@@ -25,7 +25,7 @@ class Application
     public static function init()
     {
         // create a router instance
-        static::$router = new Router();
+        static::$router = Router::getInstance();
     }
 
     /**

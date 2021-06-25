@@ -6,6 +6,9 @@ use \Zeretei\PHPCore\Request;
 
 class Router
 {
+
+    protected static $instance;
+
     /**
      * Router host
      * 
@@ -27,6 +30,15 @@ class Router
      */
     public static $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'];
 
+
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            return new static;
+        }
+
+        return self::$instance;
+    }
 
     /**
      * Get request
