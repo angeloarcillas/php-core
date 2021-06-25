@@ -1,0 +1,96 @@
+<?php
+
+namespace Zeretei\PHPCore;
+
+use \Zeretei\PHPCore\Request;
+
+class Router
+{
+    /**
+     * Router host
+     * 
+     * @var string $host
+     */
+    protected const HOST = 'php-core';
+
+    /**
+     * Routes placeholder
+     * 
+     * @var array $routes
+     */
+    protected static $routes;
+
+    /**
+     * Routes available request method
+     * 
+     * @var array $verbs
+     */
+    public static $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'];
+
+
+    /**
+     * Get request
+     * 
+     * @param string $url
+     * @param array|callable $controller
+     */
+    public static function get($url, $controller)
+    {
+        self::addRoute('GET', $url, $controller);
+    }
+
+    /**
+     * Post request
+     * 
+     * @param string $url
+     * @param array|callable $controller
+     */
+    public static function post($url, $controller)
+    {
+        self::addRoute('POST', $url, $controller);
+    }
+
+
+    /**
+     * Match the current url with defined routes
+     */
+    public function resolve()
+    {
+        $uri = Request::uri();
+        $method = Request::method();
+
+        $uri = trim($uri, '/');
+        $controller = self::$routes[$method][$uri] ?? null;
+
+        if (is_null($controller)) {
+            throw new \Exception("Route {$uri} isn't defined.");
+        }
+
+        $controller();
+        exit;
+    }
+
+    /**
+     * Add a route
+     * 
+     * @param string $method
+     * @param string $url
+     * @param array|callable $controller
+     */
+    public static function addRoute($method, $url, $controller)
+    {
+        // remove extra slashes
+        $url = trim(static::HOST . $url, "/");
+
+        // sanitize url
+        $url = filter_var($url, FILTER_SANITIZE_URL);
+
+        // sanitize string
+        if (is_array($controller)) {
+            $controller = filter_var_array($controller, FILTER_SANITIZE_STRING);
+        }
+
+        // set route to routes placeholder
+        self::$routes[$method][$url] = $controller;
+    }
+}
