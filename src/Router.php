@@ -33,11 +33,11 @@ class Router
 
     public static function getInstance()
     {
-        if (!self::$instance) {
-            return new static;
+        if (is_null(static::$instance)) {
+            static::$instance = new static;
         }
 
-        return self::$instance;
+        return static::$instance;
     }
 
     /**
