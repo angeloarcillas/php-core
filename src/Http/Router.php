@@ -83,25 +83,24 @@ class Router
             exit;
         }
 
-        [$controller, $action] = $controller;
+        [$controller, $action] = [...$controller, null];
 
         if (!class_exists($controller)) {
             throw new \Exception(
-                sprintf('Controller: "%s" doesn\'t exists.', $controller)
-            );
-        }
-        // if no method then use __invoke
-        $action = $action ?? "__invoke";
-
-        if (!method_exists($controller, $action)) {
-            throw new \Exception(
-                sprintf('Method: "%s()" is not defined on %s.', $action, $controller)
+                sprintf('Controller: "%s" does not exists.', $controller)
             );
         }
 
         $class = new $controller();
+        // $class->callAction($action, $this->attributes);
+
+        if (is_null($action)) {
+            return $this->callInvoke($class);
+        }
+
         return $class->$action();
     }
+
 
     /**
      * Add a route
@@ -110,7 +109,7 @@ class Router
      * @param string $url
      * @param array|callable $controller
      */
-    public static function addRoute($method, $url, $controller)
+    protected static function addRoute($method, $url, $controller)
     {
         // remove extra slashes
         $url = trim(static::HOST . $url, "/");
@@ -125,5 +124,16 @@ class Router
 
         // set route to routes placeholder
         self::$routes[$method][$url] = $controller;
+    }
+
+    protected function callInvoke($class)
+    {
+        if (!is_callable($class)) {
+            throw new \Exception(
+                sprintf('Method: "__invoke" does not exists on %s.', $class::class)
+            );
+        }
+
+        return $class();
     }
 }
