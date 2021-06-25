@@ -20,6 +20,7 @@ Router::get("/", function () {
 });
 
 Router::get('/users', [\App\Controllers\UserController::class, 'index']);
+Router::get('/users/:int', [\App\Controllers\UserController::class, 'index']);
 
 // run application
 Application::run();

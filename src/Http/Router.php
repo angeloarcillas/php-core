@@ -28,7 +28,14 @@ class Router
      * 
      * @var array $verbs
      */
-    public static $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'];
+    protected static $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'];
+
+    protected $patterns = [
+        ":int" => "(\d+)",
+        ":char" => "([a-zA-Z]+)",
+        ":str" => "(\w+)",
+        ":any" => "(.+)",
+    ];
 
 
     public static function getInstance()
@@ -69,13 +76,22 @@ class Router
     public function resolve()
     {
         $uri = Request::uri();
-        $method = Request::method();
+        $method = $_POST["_method"] ?? Request::method();
+        $controller = static::$routes[$method][$uri] ?? null;
 
-        $controller = self::$routes[$method][$uri] ?? null;
+        if (is_null($controller)) {
+            $routesWithWildcard = $this->getRoutesWithWildcard(static::$routes[$method]);
+            foreach ($routesWithWildcard as $route => $action) {
+                if ($this->matchWildcard($route, $uri)) {
+                    $controller = $action;
+                    break;
+                }
+            }
+        }
 
         if (is_null($controller)) {
             Response::setStatusCode(404);
-            throw new \Exception("Route {$uri} isn't defined.");
+            throw new \Exception(sprintf('Route: "%s" is not defined.', $uri));
         }
 
         if (is_callable($controller)) {
@@ -92,7 +108,6 @@ class Router
         }
 
         $class = new $controller();
-        // $class->callAction($action, $this->attributes);
 
         if (is_null($action)) {
             return $this->callInvoke($class);
@@ -124,6 +139,31 @@ class Router
 
         // set route to routes placeholder
         self::$routes[$method][$url] = $controller;
+    }
+
+    public function getRoutesWithWildcard($routes)
+    {
+        $hasWildcard = fn ($_v, $route) => str_contains($route, ':');
+        return array_filter($routes, $hasWildcard, ARRAY_FILTER_USE_BOTH);
+    }
+
+    protected function matchWildcard($route, $url)
+    {
+        // wildcard to search
+        $searches = array_keys($this->patterns);
+        // regex to replace wildcard
+        $replaces = array_values($this->patterns);
+        // create regex to match uri
+        $regex = str_replace($searches, $replaces, $route);
+
+        // match regex with route
+        if (preg_match("#^{$regex}$#", $url, $values)) {
+            // pop the full url then set attributes
+            $this->attributes = array_slice($values, 1); // refactor
+            return true;
+        }
+
+        return false;
     }
 
     protected function callInvoke($class)
