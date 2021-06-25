@@ -37,7 +37,7 @@ class Router
         ":any" => "(.+)",
     ];
 
-    protected $attributes;
+    protected $attributes = [];
 
 
     public static function getInstance()
@@ -79,6 +79,7 @@ class Router
     {
         $uri = Request::uri();
         $method = $_POST["_method"] ?? Request::method();
+
         $controller = static::$routes[$method][$uri] ?? null;
 
         if (is_null($controller)) {
@@ -101,21 +102,7 @@ class Router
             exit;
         }
 
-        [$controller, $action] = [...$controller, null];
-
-        if (!class_exists($controller)) {
-            throw new \Exception(
-                sprintf('Controller: "%s" does not exists.', $controller)
-            );
-        }
-
-        $class = new $controller();
-
-        if (is_null($action)) {
-            return $this->callInvoke($class);
-        }
-
-        return $class->$action(...$this->attributes);
+        return $this->callAction($controller);
     }
 
 
@@ -166,6 +153,26 @@ class Router
         }
 
         return false;
+    }
+
+
+    protected function callAction($controller)
+    {
+        if (!class_exists($controller[0])) {
+            throw new \Exception(
+                sprintf('Controller: "%s" does not exists.', $controller[0])
+            );
+        }
+
+        [$controller, $action] = [...$controller, null];
+
+        $class = new $controller();
+
+        if (is_null($action)) {
+            return $this->callInvoke($class);
+        }
+
+        return $class->$action(...$this->attributes);
     }
 
     protected function callInvoke($class)
