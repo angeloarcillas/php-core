@@ -1,5 +1,10 @@
 <?php
 
+use Zeretei\PHPCore\Request;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
-echo "Hello World!";
+require_once __DIR__ . '/../src/helpers.php';
+
+$m = Request::method();
+dd($m);
