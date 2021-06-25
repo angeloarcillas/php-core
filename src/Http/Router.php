@@ -78,8 +78,29 @@ class Router
             throw new \Exception("Route {$uri} isn't defined.");
         }
 
-        $controller();
-        exit;
+        if (is_callable($controller)) {
+            $controller();
+            exit;
+        }
+
+        [$controller, $action] = $controller;
+
+        if (!class_exists($controller)) {
+            throw new \Exception(
+                sprintf('Controller: "%s" doesn\'t exists.', $controller)
+            );
+        }
+        // if no method then use __invoke
+        $action = $action ?? "__invoke";
+
+        if (!method_exists($controller, $action)) {
+            throw new \Exception(
+                sprintf('Method: "%s()" is not defined on %s.', $action, $controller)
+            );
+        }
+
+        $class = new $controller();
+        return $class->$action();
     }
 
     /**

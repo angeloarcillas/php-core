@@ -6,6 +6,6 @@ class UserController
 {
     public function index()
     {
-        return "Index";
+        echo "Index";
     }
 }

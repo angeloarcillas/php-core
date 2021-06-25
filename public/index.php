@@ -19,5 +19,7 @@ Router::get("/", function () {
     ddd(Request::uri());
 });
 
+Router::get('/users', [\App\Controllers\UserController::class, 'index']);
+
 // run application
 Application::run();
