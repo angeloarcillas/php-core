@@ -2,7 +2,7 @@
 
 namespace Zeretei\PHPCore;
 
-use Zeretei\PHPCore\Router;
+use Zeretei\PHPCore\Http\Router;
 
 class Application
 {

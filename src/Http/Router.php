@@ -1,8 +1,8 @@
 <?php
 
-namespace Zeretei\PHPCore;
+namespace Zeretei\PHPCore\Http;
 
-use \Zeretei\PHPCore\Request;
+use \Zeretei\PHPCore\Http\Request;
 
 class Router
 {

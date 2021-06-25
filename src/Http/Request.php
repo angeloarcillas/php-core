@@ -1,6 +1,6 @@
 <?php
 
-namespace Zeretei\PHPCore;
+namespace Zeretei\PHPCore\Http;
 
 class Request
 {
