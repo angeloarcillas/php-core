@@ -4,6 +4,9 @@ namespace Zeretei\PHPCore;
 
 class Request
 {
+    /**
+     * Request URI
+     */
     public static function uri()
     {
         // trimmed url
@@ -13,11 +16,20 @@ class Request
         return $base_url;
     }
 
+    /**
+     * Request method
+     */
     public static function method()
     {
+        // forced uppercase
         return strtoupper($_SERVER['REQUEST_METHOD']);
     }
 
+    /**
+     * Request query string
+     * 
+     * @param null|string $key
+     */
     public static function query($key = null)
     {
         // if key is null, return all get request
