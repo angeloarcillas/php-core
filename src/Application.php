@@ -2,8 +2,10 @@
 
 namespace Zeretei\PHPCore;
 
-use \Zeretei\PHPCore\Http\{Router, Request, Response};
 use \Zeretei\PHPCore\Container;
+use \Zeretei\PHPCore\Http\Router;
+use \Zeretei\PHPCore\Http\Request;
+use \Zeretei\PHPCore\Http\Response;
 
 /**
  * Application base class
