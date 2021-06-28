@@ -9,6 +9,8 @@ use \Zeretei\PHPCore\Http\Response;
 
 /**
  * Application base class
+ * 
+ * TODO: Create a 1 instance application
  */
 class Application
 {
