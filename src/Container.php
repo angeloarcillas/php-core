@@ -5,14 +5,18 @@ namespace Zeretei\PHPCore;
 class Container
 {
     /**
-     * @var self $instance
+     * Container instance
+     * 
+     * @var self
      */
-    public static $instance;
+    protected static $instance;
 
     /**
-     *  @var array $registry
+     * data placeholder
+     * 
+     *  @var array
      */
-    public static $registry = [];
+    protected $registry = [];
 
     /**
      * Bind value to container
@@ -20,10 +24,10 @@ class Container
      * @param string $key
      * @param mixed $value
      */
-    public static function bind($key, $value)
+    public function bind($key, $value)
     {
         // bind a value to container
-        static::$registry[$key] = $value;
+        $this->registry[$key] = $value;
     }
 
     /**
@@ -31,15 +35,15 @@ class Container
      * 
      * @param string
      */
-    public static function get($key)
+    public function get($key)
     {
         // check if value exist on contaienr
-        if (!array_key_exists($key, static::$registry)) {
+        if (!array_key_exists($key, $this->registry)) {
             throw new \Exception("No {$key} is bound in the container.");
         }
 
         // return value from container
-        return static::$registry[$key];
+        return $this->registry[$key];
     }
 
     /**
