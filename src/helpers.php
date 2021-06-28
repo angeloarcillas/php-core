@@ -15,6 +15,27 @@ if (!function_exists('app')) {
 }
 
 /**
+ *  View
+ */
+if (!function_exists('view')) {
+    function view(string $file, $params = [])
+    {
+        $path = app('path.views') . "/{$file}.view.php";
+        $exists = file_exists($path);
+        
+        if (!$exists) {
+            throw new \Exception(sprintf(
+                'File: "%s" does not exists on Views folder.',
+                $file,
+            ));
+        }
+
+        extract($params);
+        return require $path;
+    }
+}
+
+/**
  *  Die and Dump
  */
 if (!function_exists('dd')) {

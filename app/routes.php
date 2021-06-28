@@ -3,7 +3,7 @@
 use \Zeretei\PHPCore\Http\Router;
 
 Router::get('/', function () {
-    return require_once __DIR__ . '/Views/welcome.view.php';
+    return view('welcome');
 });
 
 Router::get('/users/:int/name/:str', function ($i, $n) {
