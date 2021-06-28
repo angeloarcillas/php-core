@@ -15,7 +15,8 @@ class UserController extends Controller
     public static function index()
     {
         $user = new User();
-        dd($user->selectAll());
+        $users = $user->selectAll();
+        return view('welcome', compact('users'));
     }
 
     public function show($id, $name)
