@@ -11,6 +11,21 @@ class Request
      */
     protected array $attributes = [];
 
+    public function __construct()
+    {
+        // set attriutes and sanitize request
+        $this->attributes = array_map(function (string $request) {
+            // check if it's not a string
+            if (!is_string($request)) return $request;
+
+            // convert special character to html entities
+            $xhtml = htmlspecialchars($request);
+
+            // strip html and php tags
+            return strip_tags($xhtml);
+        }, $_REQUEST);
+    }
+
     /**
      * Request URI
      */
@@ -73,5 +88,10 @@ class Request
         }
 
         return $this->attributes[$key];
+    }
+
+    public function all()
+    {
+        return $this->attributes;
     }
 }

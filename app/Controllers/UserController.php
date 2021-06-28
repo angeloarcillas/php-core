@@ -14,8 +14,8 @@ class UserController extends Controller
     }
     public static function index()
     {
-        $user = new User();
-        dd($user);
+        $r = app('request')->all();
+        dd($r);
     }
 
     public function show($id, $name)
