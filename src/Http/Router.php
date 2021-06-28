@@ -3,43 +3,51 @@
 namespace Zeretei\PHPCore\Http;
 
 use \Zeretei\PHPCore\Http\Request;
+use \Zeretei\PHPCore\Http\RouterController;
 
 class Router
 {
-
+    use Route;
+    use RouterController;
+    
+    /**
+     * Router instance
+     * 
+     * @var self
+     */
     protected static $instance;
 
     /**
      * Router host
      * 
-     * @var string $host
+     * @var string
      */
     protected const HOST = 'php-core';
 
     /**
      * Routes placeholder
      * 
-     * @var array $routes
+     * @var array
      */
     protected static $routes;
 
     /**
      * Routes available request method
      * 
-     * @var array $verbs
+     * @var array
      */
     protected static $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'];
 
-    protected $patterns = [
-        ":int" => "(\d+)",
-        ":char" => "([a-zA-Z]+)",
-        ":str" => "(\w+)",
-        ":any" => "(.+)",
-    ];
 
+
+    /**
+     * Router attributes placeholder
+     */
     protected $attributes = [];
 
-
+    /**
+     * Get Router instance
+     */
     public static function getInstance()
     {
         if (is_null(static::$instance)) {
@@ -47,28 +55,6 @@ class Router
         }
 
         return static::$instance;
-    }
-
-    /**
-     * Get request
-     * 
-     * @param string $url
-     * @param array|callable $controller
-     */
-    public static function get($url, $controller)
-    {
-        self::addRoute('GET', $url, $controller);
-    }
-
-    /**
-     * Post request
-     * 
-     * @param string $url
-     * @param array|callable $controller
-     */
-    public static function post($url, $controller)
-    {
-        self::addRoute('POST', $url, $controller);
     }
 
 
@@ -79,11 +65,11 @@ class Router
     {
         $uri = Request::uri();
         $method = $_POST["_method"] ?? Request::method();
-
         $controller = static::$routes[$method][$uri] ?? null;
 
         if (is_null($controller)) {
             $routesWithWildcard = $this->getRoutesWithWildcard(static::$routes[$method]);
+
             foreach ($routesWithWildcard as $route => $action) {
                 if ($this->matchWildcard($route, $uri)) {
                     $controller = $action;
@@ -104,7 +90,6 @@ class Router
 
         return $this->callAction($controller);
     }
-
 
     /**
      * Add a route
@@ -128,61 +113,5 @@ class Router
 
         // set route to routes placeholder
         self::$routes[$method][$url] = $controller;
-    }
-
-    public function getRoutesWithWildcard($routes)
-    {
-        $hasWildcard = fn ($_v, $route) => str_contains($route, ':');
-        return array_filter($routes, $hasWildcard, ARRAY_FILTER_USE_BOTH);
-    }
-
-    protected function matchWildcard($route, $url)
-    {
-        // wildcard to search
-        $searches = array_keys($this->patterns);
-        // regex to replace wildcard
-        $replaces = array_values($this->patterns);
-        // create regex to match uri
-        $regex = str_replace($searches, $replaces, $route);
-
-        // match regex with route
-        if (preg_match("#^{$regex}$#", $url, $values)) {
-            // pop the full url then set attributes
-            $this->attributes = array_slice($values, 1); // refactor
-            return true;
-        }
-
-        return false;
-    }
-
-
-    protected function callAction($controller)
-    {
-        if (!class_exists($controller[0])) {
-            throw new \Exception(
-                sprintf('Controller: "%s" does not exists.', $controller[0])
-            );
-        }
-
-        [$controller, $action] = [...$controller, null];
-
-        $class = new $controller();
-
-        if (is_null($action)) {
-            return $this->callInvoke($class);
-        }
-
-        return $class->$action(...$this->attributes);
-    }
-
-    protected function callInvoke($class)
-    {
-        if (!is_callable($class)) {
-            throw new \Exception(
-                sprintf('Method: "__invoke" does not exists on %s.', $class::class)
-            );
-        }
-
-        return $class();
     }
 }

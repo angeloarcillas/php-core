@@ -1,29 +1,21 @@
 <?php
 
 use Zeretei\PHPCore\Application;
-use Zeretei\PHPCore\Http\Request;
 use Zeretei\PHPCore\Http\Router;
 
 // import autoloader
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// import helper functions
-require_once __DIR__ . '/../src/helpers.php';
+// set config
+$config = [
+    'root_path' => dirname(__DIR__),
+];
 
-// create application
-Application::init();
+// create application instance
+$app = new Application($config);
 
-// define routes
-Router::get("/", function () {
-    echo "Working...";
-    ddd(Request::uri());
-});
-
-Router::get('/users', [\App\Controllers\UserController::class, 'index']);
-Router::get('/users/:int/name/:str', function ($id, $name) {
-    dd($id, $name);
-});
-Router::get('/hero/:int/name/:str', [\App\Controllers\UserController::class, 'show']);
+$routes = $app->ROOT_DIR . '/app/routes.php';
+Router::load($routes);
 
 // run application
-Application::run();
+$app->run();
