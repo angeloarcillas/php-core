@@ -85,8 +85,7 @@ class Router
         }
 
         if (is_callable($controller)) {
-            $controller(...$this->attributes);
-            exit;
+            return $controller(...$this->attributes);
         }
 
         return $this->callAction($controller);
