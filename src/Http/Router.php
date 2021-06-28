@@ -16,7 +16,7 @@ class Router
      * 
      * @var self
      */
-    protected static $instance;
+    protected static self $instance;
 
     /**
      * Router host
@@ -30,26 +30,26 @@ class Router
      * 
      * @var array
      */
-    protected static $routes;
+    protected static array $routes;
 
     /**
      * Routes available request method
      * 
      * @var array
      */
-    protected static $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'];
+    protected static array $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'];
 
 
 
     /**
      * Router attributes placeholder
      */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     /**
      * Get Router instance
      */
-    public static function getInstance()
+    public static function getInstance(): Router
     {
         if (is_null(static::$instance)) {
             static::$instance = new static;
@@ -99,7 +99,7 @@ class Router
      * @param string $url
      * @param array|callable $controller
      */
-    protected static function addRoute($method, $url, $controller)
+    protected static function addRoute(string $method, string $url, array|callable $controller): void
     {
         // remove extra slashes
         $url = trim(static::HOST . $url, "/");
