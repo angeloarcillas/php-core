@@ -2,7 +2,7 @@
 
 namespace Zeretei\PHPCore;
 
-use \Zeretei\PHPCore\Http\{Router, Route, Request, Response};
+use \Zeretei\PHPCore\Http\{Router, Request, Response};
 use \Zeretei\PHPCore\Container;
 
 class Application extends Container
@@ -27,7 +27,6 @@ class Application extends Container
         $this->ROOT_DIR = $config['root_path'] ?? '/';
         $this->bind('config', $config);
         $this->bind('router', new Router());
-        $this->bind('route', new Route());
         $this->bind('request', new Request());
         $this->bind('response', new Response());
     }
@@ -38,7 +37,7 @@ class Application extends Container
     public function run()
     {
         try {
-            $this->get('route')->resolve();
+            $this->get('router')->resolve();
         } catch (\Exception $e) {
             ddd($e);
         }
