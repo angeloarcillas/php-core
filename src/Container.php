@@ -12,7 +12,7 @@ class Container
      * 
      * @var self
      */
-    protected static string $instance;
+    protected static ?Container $instance = null;
 
     /**
      * data placeholder
