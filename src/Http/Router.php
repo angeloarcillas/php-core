@@ -3,13 +3,14 @@
 namespace Zeretei\PHPCore\Http;
 
 use \Zeretei\PHPCore\Http\Request;
-use \Zeretei\PHPCore\Http\RouterController;
+use \Zeretei\PHPCore\Http\Traits\Route;
+use \Zeretei\PHPCore\Http\Traits\RouterController;
 
 class Router
 {
     use Route;
     use RouterController;
-    
+
     /**
      * Router instance
      * 
