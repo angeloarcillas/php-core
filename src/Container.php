@@ -53,7 +53,7 @@ class Container
     /**
      * Get the instance of the Container
      */
-    public static function getInstance(): self
+    public static function getInstance(): Container
     {
         // check if instance is null
         if (is_null(static::$instance)) {
