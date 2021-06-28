@@ -35,12 +35,9 @@ class Application
     public function __construct(array $config = null)
     {
         $this->ROOT_DIR = $config['root_dir'] ?? '/';
-
-        Container::bind('application', $this);
         Container::bind('config', $config);
-        Container::bind('router', new Router());
-        Container::bind('request', new Request());
-        Container::bind('response', new Response());
+        $this->registerServices();
+        $this->registerPath();
     }
 
     /**
@@ -49,9 +46,30 @@ class Application
     public function run()
     {
         try {
-            Container::get('router')->resolve();
+            echo Container::get('router')->resolve();
         } catch (\Exception $e) {
             ddd($e);
         }
+    }
+
+    /**
+     * Register services to container
+     */
+    protected function registerServices()
+    {
+        Container::bind('app', $this);
+        Container::bind('router', new Router());
+        Container::bind('request', new Request());
+        Container::bind('response', new Response());
+    }
+
+    /**
+     * Register paths tp container
+     */
+    protected function registerPath()
+    {
+        Container::bind('path.views', $this->ROOT_DIR . '/app/Views');
+        Container::bind('path.controllers', $this->ROOT_DIR . '/app/Controllers');
+        Container::bind('path.models', $this->ROOT_DIR . '/app/Models');
     }
 }
