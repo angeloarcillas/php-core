@@ -19,7 +19,7 @@ class Container
      * 
      *  @var array
      */
-    protected array $registry = [];
+    protected static array $registry = [];
 
     /**
      * Bind value to container
@@ -27,10 +27,10 @@ class Container
      * @param string $key
      * @param mixed $value
      */
-    public function bind(string $key, mixed $value): void
+    public static function bind(string $key, mixed $value): void
     {
         // bind a value to container
-        $this->registry[$key] = $value;
+        static::$registry[$key] = $value;
     }
 
     /**
@@ -39,15 +39,23 @@ class Container
      * @param string
      * @return mixed 
      */
-    public function get(string $key): mixed
+    public static function get(string $key): mixed
     {
         // check if value exist on contaienr
-        if (!array_key_exists($key, $this->registry)) {
+        if (!array_key_exists($key, static::$registry)) {
             throw new \Exception("No {$key} is bound in the container.");
         }
 
         // return value from container
-        return $this->registry[$key];
+        return static::$registry[$key];
+    }
+
+    /**
+     * All bind services
+     */
+    public static function all()
+    {
+        return static::$registry; 
     }
 
     /**

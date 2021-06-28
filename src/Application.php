@@ -10,7 +10,7 @@ use \Zeretei\PHPCore\Http\Response;
 /**
  * Application base class
  */
-class Application extends Container
+class Application
 {
     /**
      * Application version
@@ -34,11 +34,13 @@ class Application extends Container
      */
     public function __construct(array $config = null)
     {
-        $this->ROOT_DIR = $config['root_path'] ?? '/';
-        $this->bind('config', $config);
-        $this->bind('router', new Router());
-        $this->bind('request', new Request());
-        $this->bind('response', new Response());
+        $this->ROOT_DIR = $config['root_dir'] ?? '/';
+
+        Container::bind('application', $this);
+        Container::bind('config', $config);
+        Container::bind('router', new Router());
+        Container::bind('request', new Request());
+        Container::bind('response', new Response());
     }
 
     /**
@@ -47,7 +49,7 @@ class Application extends Container
     public function run()
     {
         try {
-            $this->get('router')->resolve();
+            Container::get('router')->resolve();
         } catch (\Exception $e) {
             ddd($e);
         }

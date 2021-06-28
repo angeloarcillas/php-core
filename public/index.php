@@ -8,13 +8,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 // set config
 $config = [
-    'root_path' => dirname(__DIR__),
+    'root_dir' => dirname(__DIR__),
 ];
 
 // create application instance
 $app = new Application($config);
 
 $routes = $app->ROOT_DIR . '/app/routes.php';
+
 Router::load($routes);
 
 // run application
