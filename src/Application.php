@@ -5,6 +5,9 @@ namespace Zeretei\PHPCore;
 use \Zeretei\PHPCore\Http\{Router, Request, Response};
 use \Zeretei\PHPCore\Container;
 
+/**
+ * Application base class
+ */
 class Application extends Container
 {
     /**
@@ -22,6 +25,11 @@ class Application extends Container
     public const ROOT_DIR = '/';
 
 
+    /**
+     * Bind default application configs
+     * 
+     * @param null|string $config
+     */
     public function __construct($config = null)
     {
         $this->ROOT_DIR = $config['root_path'] ?? '/';
