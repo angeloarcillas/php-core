@@ -2,6 +2,9 @@
 
 namespace Zeretei\PHPCore;
 
+/**
+ * Service cointainer for application
+ */
 class Container
 {
     /**
@@ -53,6 +56,7 @@ class Container
     {
         // check if instance is null
         if (is_null(static::$instance)) {
+            // set instance
             static::$instance = new static;
         }
 
