@@ -9,7 +9,7 @@ trait Route
      * 
      * @param string $file
      */
-    public static function load($file)
+    public static function load(string $file)
     {
         return require $file;
     }
@@ -20,7 +20,7 @@ trait Route
      * @param string $url
      * @param array|callable $controller
      */
-    public static function get($url, $controller)
+    public static function get(string $url, array|callable $controller): void
     {
         static::addRoute('GET', $url, $controller);
     }
@@ -31,7 +31,7 @@ trait Route
      * @param string $url
      * @param array|callable $controller
      */
-    public static function post($url, $controller)
+    public static function post(string $url, array|callable $controller): void
     {
         static::addRoute('POST', $url, $controller);
     }
