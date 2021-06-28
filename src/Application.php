@@ -46,7 +46,14 @@ class Application
     public function run()
     {
         try {
-            echo Container::get('router')->resolve();
+            // start output buffer
+            ob_start();
+
+            // start router
+            Container::get('router')->resolve();
+            
+            // echo output buffer
+            echo ob_get_clean();
         } catch (\Exception $e) {
             ddd($e);
         }
