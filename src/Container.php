@@ -12,14 +12,14 @@ class Container
      * 
      * @var self
      */
-    protected static $instance;
+    protected static string $instance;
 
     /**
      * data placeholder
      * 
      *  @var array
      */
-    protected $registry = [];
+    protected array $registry = [];
 
     /**
      * Bind value to container
@@ -27,7 +27,7 @@ class Container
      * @param string $key
      * @param mixed $value
      */
-    public function bind($key, $value)
+    public function bind(string $key, mixed $value): void
     {
         // bind a value to container
         $this->registry[$key] = $value;
@@ -37,8 +37,9 @@ class Container
      * Get value from container
      * 
      * @param string
+     * @return mixed 
      */
-    public function get($key)
+    public function get(string $key): mixed
     {
         // check if value exist on contaienr
         if (!array_key_exists($key, $this->registry)) {
@@ -52,7 +53,7 @@ class Container
     /**
      * Get the instance of the Container
      */
-    public static function getInstance()
+    public static function getInstance(): self
     {
         // check if instance is null
         if (is_null(static::$instance)) {
