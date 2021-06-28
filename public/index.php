@@ -9,6 +9,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // set config
 $config = [
     'root_dir' => dirname(__DIR__),
+    'database' => require_once dirname(__DIR__) . '/config.php'
 ];
 
 // create application instance

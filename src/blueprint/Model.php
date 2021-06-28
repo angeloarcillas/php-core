@@ -2,7 +2,9 @@
 
 namespace Zeretei\PHPCore\Blueprint;
 
-abstract class Model
+use \Zeretei\PHPCore\Database\QueryBuilder;
+
+abstract class Model extends QueryBuilder
 {
     protected string $table;
     protected array $fillable = [];
@@ -14,6 +16,27 @@ abstract class Model
             $this->table = $this->getBaseClassname() . 's';
         }
     }
+
+        /**
+     * Select all rows from database | READ
+     *
+     * @param null|string $table
+     * @param array $columns
+     * @return array
+     */
+    public function selectAll(array $columns = ['*'], string $table = null): array
+    {
+        $sql = sprintf(
+            "SELECT %s FROM %s",
+            // set column names
+            implode(',', $columns),
+            // check if user defined a table
+            $table ?? $this->table
+        );
+
+        return $this->rawSelectAll($sql);
+    }
+
 
     /**
      * Filter $request with $this->fillable
