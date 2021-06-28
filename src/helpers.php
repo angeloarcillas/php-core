@@ -4,7 +4,6 @@
  *  application helper
  */
 if (!function_exists('app')) {
-    // !not fully working
     function app(string $key = null)
     {
         if (is_null($key)) {
