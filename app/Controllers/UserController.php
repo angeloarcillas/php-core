@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\User;
 use Zeretei\PHPCore\Blueprint\Controller;
 
 class UserController extends Controller
@@ -13,7 +14,8 @@ class UserController extends Controller
     }
     public static function index()
     {
-        echo "Index";
+        $user = new User();
+        dd($user);
     }
 
     public function show($id, $name)
