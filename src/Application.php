@@ -30,9 +30,9 @@ class Application extends Container
     /**
      * Bind default application configs
      * 
-     * @param null|string $config
+     * @param array $config
      */
-    public function __construct($config = null)
+    public function __construct(array $config = null)
     {
         $this->ROOT_DIR = $config['root_path'] ?? '/';
         $this->bind('config', $config);
