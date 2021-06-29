@@ -15,7 +15,8 @@ class UserController extends Controller
     public function index()
     {
         $user = new User();
-        return view('welcome', compact('users'));
+        $users = $user->all();
+        return view('users/index', compact('users'));
     }
 
     public function show($id)

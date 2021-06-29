@@ -97,9 +97,11 @@ abstract class Model
         return Application::get('database')->fetch($sql, [$id]);
     }
 
-    // public function all(): array
-    // {
-    // }
+    public function all(): array
+    {
+        $sql = "SELECT * FROM {$this->table}";
+        return Application::get('database')->fetchAll($sql);
+    }
 
     /**
      * Filter $request with $this->fillable

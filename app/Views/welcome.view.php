@@ -9,8 +9,6 @@
 </head>
 
 <body>
-    <?php ddd($users) ?>
-
     <h1>Welcome</h1>
 </body>
 
