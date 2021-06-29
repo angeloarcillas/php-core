@@ -52,13 +52,36 @@ if (!function_exists('request')) {
 }
 
 /**
- *  encode and echo
+ *  Redirect
+ */
+if (!function_exists('redirect')) {
+    function redirect(string $path, int $status = 302)
+    {
+        if (is_null($path)) {
+            return app('router');
+        }
+
+        if (headers_sent() === false) {
+            // convert user.settings to user/settings
+            $realSubPath = str_replace('.', '/', e($path));
+            // trim excess forward slash
+            $realPath = '/' . trim($realSubPath, '/');
+            // redirect
+            header("location:{$realPath}", true, $status);
+            exit;
+        }
+
+        return false;
+    }
+}
+
+/**
+ *  encode
  */
 if (!function_exists('e')) {
     function e(string $str)
     {
-        echo htmlspecialchars($str, ENT_QUOTES);
-        return;
+        return htmlspecialchars($str, ENT_QUOTES);
     }
 }
 
