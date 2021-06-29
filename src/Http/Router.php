@@ -2,7 +2,6 @@
 
 namespace Zeretei\PHPCore\Http;
 
-use \Zeretei\PHPCore\Http\Request;
 use \Zeretei\PHPCore\Http\Traits\Route;
 use \Zeretei\PHPCore\Http\Traits\RouterController;
 
@@ -42,33 +41,41 @@ class Router
     /**
      * Match the current url with defined routes
      */
-    public function resolve()
+    public function resolve($uri, $method)
     {
-        $uri = Request::uri();
-        $method = $_POST["_method"] ?? Request::method();
-        $controller = static::$routes[$method][$uri] ?? null;
+        // get request method
+        $method = $_POST["_method"] ?? $method;
 
-        if (is_null($controller)) {
+        // get callback
+        $callback = static::$routes[$method][$uri] ?? null;
+
+        if (is_null($callback)) {
+            // get routes w/ wildcard
             $routesWithWildcard = $this->getRoutesWithWildcard(static::$routes[$method]);
 
+            // loop through routes
             foreach ($routesWithWildcard as $route => $action) {
+                // check if uri & route match
                 if ($this->matchWildcard($route, $uri)) {
-                    $controller = $action;
+                    // set callback
+                    $callback = $action;
                     break;
                 }
             }
         }
 
-        if (is_null($controller)) {
+        // check if route found
+        if (is_null($callback)) {
             Response::setStatusCode(404);
             throw new \Exception(sprintf('Route: "%s" is not defined.', $uri));
         }
 
-        if (is_callable($controller)) {
-            return $controller(...$this->attributes);
+        // check if callback is callable
+        if (is_callable($callback)) {
+            return $callback(...$this->attributes);
         }
 
-        return $this->callAction($controller);
+        return $this->callAction($callback);
     }
 
     /**
