@@ -12,13 +12,6 @@ class Router
     use RouterController;
 
     /**
-     * Router instance
-     * 
-     * @var self
-     */
-    protected static self $instance;
-
-    /**
      * Router host
      * 
      * @var string
@@ -45,24 +38,6 @@ class Router
      * Router attributes placeholder
      */
     protected array $attributes = [];
-
-    public function __construct()
-    {
-        static::$instance = $this;
-    }
-
-    /**
-     * Get Router instance
-     */
-    public static function getInstance(): Router
-    {
-        if (is_null(static::$instance)) {
-            static::$instance = new static;
-        }
-
-        return static::$instance;
-    }
-
 
     /**
      * Match the current url with defined routes
