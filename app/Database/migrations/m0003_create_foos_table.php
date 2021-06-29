@@ -17,7 +17,7 @@ class CreateFoosTable
 
     public function down()
     {
-        $sql = "DROP TABLE heroes";
+        $sql = "DROP TABLE foos";
         Application::get('database')->execute($sql);
     }
 }
