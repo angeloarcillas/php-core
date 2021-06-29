@@ -24,7 +24,10 @@ class Router
      */
     protected static array $routes = [
         'GET' => [],
-        'POST' => []
+        'POST' => [],
+        'PUT' => [],
+        'PATCH' => [],
+        'DELETE' => [],
     ];
 
     /**
@@ -32,7 +35,7 @@ class Router
      * 
      * @var array
      */
-    protected static array $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'];
+    protected static array $verbs = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 
 
 
@@ -48,6 +51,10 @@ class Router
     {
         // get request method
         $method = $_POST["_method"] ?? $method;
+
+        if (!$this->isValidVerb($method)) {
+            throw new \Exception(sprintf('Request Method: "%s" is not a valid method.', $method));
+        }
 
         // get callback
         $callback = static::$routes[$method][$uri] ?? null;
@@ -103,5 +110,13 @@ class Router
 
         // set route to routes placeholder
         self::$routes[$method][$url] = $controller;
+    }
+
+    /**
+     * Check request method if valid.
+     */
+    public function isValidVerb(string $method): bool
+    {
+        return in_array($method, static::$verbs);
     }
 }
