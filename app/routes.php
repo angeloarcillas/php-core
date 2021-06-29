@@ -10,6 +10,7 @@ return function (Router $router) {
     });
 
     $router->get('/users', [UserController::class, 'index']);
+    $router->get('/users/:int', [UserController::class, 'show']);
     $router->get('/users/create', [UserController::class, 'create']);
     $router->post('/users', [UserController::class, 'store']);
 

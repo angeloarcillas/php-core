@@ -62,9 +62,16 @@ abstract class Model
     // {
     // }
 
-    // public function select($params): array|false
-    // {
-    // }
+    public function select($id): object|false
+    {
+        $sql = sprintf(
+            "SELECT * FROM %s WHERE %s = ? LIMIT 1",
+            $table ?? $this->table,
+            $key ?? $this->key
+        );
+
+        return Application::get('database')->fetch($sql, [$id]);
+    }
 
     // public function all(): array
     // {

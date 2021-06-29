@@ -18,24 +18,25 @@ class UserController extends Controller
         return view('welcome', compact('users'));
     }
 
-    public function show($id, $name)
+    public function show($id)
     {
         $user = new User();
-        dd($id, $name);
+        $user = $user->select($id);
+        return view('users/show', compact('user'));
     }
-    
+
     public function create()
     {
         return view('users/create');
     }
-    
+
     public function store()
     {
         $user = new User();
         $user = $user->insert(request()->all());
         dd($user);
     }
-    
+
     public function test(string $b = null)
     {
         return $b;
