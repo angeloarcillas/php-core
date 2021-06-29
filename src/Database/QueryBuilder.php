@@ -2,38 +2,75 @@
 
 namespace Zeretei\PHPCore\Database;
 
-abstract class QueryBuilder
+/**
+ * TODO: Add error handling
+ */
+class QueryBuilder
 {
+    /**
+     * PDO instnace
+     * 
+     * @var \PDO
+     */
+    protected \PDO $pdo;
 
-    public function query($sql, $params = [])
+    /**
+     * Establish connection
+     */
+    public function __construct($config)
     {
-        $stmt = $this->conn()->prepare($sql);
+        $this->pdo = new \PDO(
+            $config['connection'] . ';dbname=' . $config['name'],
+            $config['username'],
+            $config['password'],
+            $config['options']
+        );
+    }
+
+    /**
+     * Query a SQL statement
+     */
+    public function query($sql, $params = []): bool
+    {
+        $stmt = $this->pdo->prepare($sql);
         return $stmt->execute($params);
     }
 
-    public function fetch($sql, $params = [])
+    /**
+     * Fetch a single row from database
+     */
+    public function fetch($sql, $params = []): mixed
     {
-        $stmt = $this->conn()->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetch();
     }
 
-    public function fetchAll($sql, $params = [])
+    /**
+     * Fetch all row from database
+     */
+    public function fetchAll(string $sql, array $params = []): array
     {
-        $stmt = $this->conn()->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll();
     }
 
-    // Establish connection
-    private function conn()
+    /**
+     * Count all rows from database
+     */
+    public function count(string $sql, array $params = []): int
     {
-        // TODO: revamp app to "Keep it simple approach"
-        return new \PDO(
-            $this->config['connection'] . ';dbname=' . $this->config['name'],
-            $this->config['username'],
-            $this->config['password'],
-            $this->config['options']
-        );
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->rowCount();
+    }
+
+    /**
+     * Execute a SQL command
+     */
+    public function execute(string $sql): int|false
+    {
+        return $this->pdo->exec($sql);
     }
 }
