@@ -27,7 +27,7 @@ class Container
      * @param string $key
      * @param mixed $value
      */
-    public function bind(string $key, mixed $value): void
+    public static function bind(string $key, mixed $value): void
     {
         // bind a value to container
         static::$registry[$key] = $value;
@@ -39,7 +39,7 @@ class Container
      * @param string
      * @return mixed 
      */
-    public function get(string $key): mixed
+    public static function get(string $key): mixed
     {
         // check if value exist on contaienr
         if (!array_key_exists($key, static::$registry)) {
@@ -53,7 +53,7 @@ class Container
     /**
      * All bind services
      */
-    public function all()
+    public static function all()
     {
         return static::$registry;
     }
