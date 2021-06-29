@@ -14,8 +14,8 @@
 
     <div class="m-12">
         <div class="w-1/3 mx-auto p-6 border rounded-md">
-            <h2 class="text-xl"><?php e($user->username) ?></h2>
-            <p class="text-gray-700 py-2"><?php e($user->email) ?></p>
+            <h2 class="text-xl"><?php echo e($user->username) ?></h2>
+            <p class="text-gray-700 py-2"><?php echo e($user->email) ?></p>
         </div>
     </div>
 

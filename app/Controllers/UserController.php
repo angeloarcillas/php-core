@@ -37,8 +37,17 @@ class UserController extends Controller
         dd($user);
     }
 
-    public function test(string $b = null)
+    public function edit($id)
     {
-        return $b;
+        $user = new User();
+        $user = $user->select($id);
+        return view('users/edit', compact('user'));
+    }
+    
+    public function update($id)
+    {
+        $user = new User();
+        $user = $user->update($id, request()->all());
+        return redirect('php-core/users');
     }
 }

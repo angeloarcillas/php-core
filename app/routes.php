@@ -13,6 +13,8 @@ return function (Router $router) {
     $router->get('/users/:int', [UserController::class, 'show']);
     $router->get('/users/create', [UserController::class, 'create']);
     $router->post('/users', [UserController::class, 'store']);
+    $router->get('/users/:int/edit', [UserController::class, 'edit']);
+    $router->put('/users/:int/update', [UserController::class, 'update']);
 
     $router->get('/migration', function () {
         $migration = new Migration();

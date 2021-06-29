@@ -54,9 +54,33 @@ abstract class Model
         return Application::get('database')->query($sql, array_values($params));
     }
 
-    // public function update($params): bool
-    // {
-    // }
+    public function update($id, $params): bool
+    {
+        // filter request with $fillable
+        $params = $this->filter($params);
+
+        // set column names
+        $keys = array_keys($params);
+
+        // set column values placeholder
+        $set = trim(implode('=?,', $keys) . '=?', ',');
+
+        // check if user defined a key
+        $key = [$this->key => $id];
+
+        // sql statement
+        $sql = sprintf(
+            'UPDATE %s SET %s WHERE %s = ?',
+            $this->table,
+            $set,
+            key($key) // get $key key
+        );
+
+        // append $key value
+        $params[] = current($key);
+
+        return Application::get('database')->query($sql, array_values($params));
+    }
 
     // public function delete($params): bool
     // {
