@@ -22,7 +22,10 @@ class Router
      * 
      * @var array
      */
-    protected static array $routes;
+    protected static array $routes = [
+        'GET' => [],
+        'POST' => []
+    ];
 
     /**
      * Routes available request method
