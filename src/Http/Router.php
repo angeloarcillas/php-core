@@ -46,6 +46,11 @@ class Router
      */
     protected array $attributes = [];
 
+    public function __construct()
+    {
+        static::$instance = $this;
+    }
+
     /**
      * Get Router instance
      */

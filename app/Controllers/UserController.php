@@ -12,7 +12,7 @@ class UserController extends Controller
     {
         echo  "asd";
     }
-    public static function index()
+    public function index()
     {
         $user = new User();
         $users = $user->selectAll();
@@ -22,5 +22,10 @@ class UserController extends Controller
     public function show($id, $name)
     {
         dd($id, $name);
+    }
+
+    public function test(string $b = null)
+    {
+        return $b;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Zeretei\PHPCore\Http\Traits;
 
+use Zeretei\PHPCore\Application;
+
 trait Route
 {
     /**
@@ -11,7 +13,8 @@ trait Route
      */
     public static function load(string $file)
     {
-        return require $file;
+        $routes = require_once $file;
+        $routes(Application::getInstance()->get('router'));
     }
 
     /**

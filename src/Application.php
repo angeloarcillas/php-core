@@ -9,10 +9,8 @@ use \Zeretei\PHPCore\Http\Response;
 
 /**
  * Application base class
- * 
- * TODO: Create a 1 instance application
  */
-class Application
+class Application extends Container
 {
     /**
      * Application version
@@ -28,16 +26,16 @@ class Application
      */
     public const ROOT_DIR = '/';
 
-
     /**
      * Bind default application configs
      * 
-     * @param array $config
+     *  @param array $config
      */
     public function __construct(array $config = null)
     {
+        static::$instance = $this;
         $this->ROOT_DIR = $config['root_dir'] ?? '/';
-        Container::bind('config', $config);
+        $this->bind('config', $config);
         $this->registerServices();
         $this->registerPath();
     }
@@ -52,8 +50,8 @@ class Application
             ob_start();
 
             // start router
-            Container::get('router')->resolve();
-            
+            $this->get('router')->resolve();
+
             // echo output buffer
             echo ob_get_clean();
         } catch (\Exception $e) {
@@ -66,10 +64,10 @@ class Application
      */
     protected function registerServices()
     {
-        Container::bind('app', $this);
-        Container::bind('router', new Router());
-        Container::bind('request', new Request());
-        Container::bind('response', new Response());
+        $this->bind('app', $this);
+        $this->bind('router', new Router());
+        $this->bind('request', new Request());
+        $this->bind('response', new Response());
     }
 
     /**
@@ -77,8 +75,9 @@ class Application
      */
     protected function registerPath()
     {
-        Container::bind('path.views', $this->ROOT_DIR . '/app/Views');
-        Container::bind('path.controllers', $this->ROOT_DIR . '/app/Controllers');
-        Container::bind('path.models', $this->ROOT_DIR . '/app/Models');
+        $this->bind('path.app', $this->ROOT_DIR . '/app');
+        $this->bind('path.views', $this->ROOT_DIR . '/app/Views');
+        $this->bind('path.models', $this->ROOT_DIR . '/app/Models');
+        $this->bind('path.controllers', $this->ROOT_DIR . '/app/Controllers');
     }
 }

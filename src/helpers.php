@@ -6,11 +6,13 @@
 if (!function_exists('app')) {
     function app(string $key = null)
     {
+        $app =  \Zeretei\PHPCore\Application::getInstance();
+
         if (is_null($key)) {
-            return \Zeretei\PHPCore\Container::getInstance();
+            return $app;
         }
 
-        return \Zeretei\PHPCore\Container::get($key);
+        return $app->get($key);
     }
 }
 
@@ -22,7 +24,7 @@ if (!function_exists('view')) {
     {
         $path = app('path.views') . "/{$file}.view.php";
         $exists = file_exists($path);
-        
+
         if (!$exists) {
             throw new \Exception(sprintf(
                 'File: "%s" does not exists on Views folder.',
