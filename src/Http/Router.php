@@ -77,7 +77,7 @@ class Router
         // check if route found
         if (is_null($callback)) {
             Response::setStatusCode(404);
-            throw new \Exception(sprintf('Route: "%s" is not defined.', $uri));
+            throw new \Exception(sprintf('Method: %s on Route: "%s" is not defined.', $method, $uri));
         }
 
         // check if callback is callable
