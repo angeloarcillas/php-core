@@ -11,7 +11,7 @@ trait Route
      * 
      * @param string $file
      */
-    public static function load(string $file)
+    public function load(string $file)
     {
         $routes = require_once $file;
         $routes(Application::getInstance()->get('router'));
@@ -23,9 +23,9 @@ trait Route
      * @param string $url
      * @param array|callable $controller
      */
-    public static function get(string $url, array|callable $controller): void
+    public function get(string $url, array|callable $controller): void
     {
-        static::addRoute('GET', $url, $controller);
+        $this->addRoute('GET', $url, $controller);
     }
 
     /**
@@ -34,8 +34,8 @@ trait Route
      * @param string $url
      * @param array|callable $controller
      */
-    public static function post(string $url, array|callable $controller): void
+    public function post(string $url, array|callable $controller): void
     {
-        static::addRoute('POST', $url, $controller);
+        $this->addRoute('POST', $url, $controller);
     }
 }

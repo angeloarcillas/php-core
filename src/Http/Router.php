@@ -88,7 +88,7 @@ class Router
      * @param string $url
      * @param array|callable $controller
      */
-    protected static function addRoute(string $method, string $url, array|callable $controller): void
+    protected function addRoute(string $method, string $url, array|callable $controller): void
     {
         // remove extra slashes
         $url = trim(static::HOST . $url, "/");
