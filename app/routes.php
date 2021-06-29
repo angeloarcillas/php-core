@@ -10,6 +10,8 @@ return function (Router $router) {
     });
 
     $router->get('/users', [UserController::class, 'index']);
+    $router->get('/users/create', [UserController::class, 'create']);
+    $router->post('/users', [UserController::class, 'store']);
 
     $router->get('/migration', function () {
         $migration = new Migration();

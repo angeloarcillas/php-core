@@ -15,15 +15,27 @@ class UserController extends Controller
     public function index()
     {
         $user = new User();
-        $users = $user->selectAll();
         return view('welcome', compact('users'));
     }
 
     public function show($id, $name)
     {
+        $user = new User();
         dd($id, $name);
     }
-
+    
+    public function create()
+    {
+        return view('users/create');
+    }
+    
+    public function store()
+    {
+        $user = new User();
+        $user = $user->insert(request()->all());
+        dd($user);
+    }
+    
     public function test(string $b = null)
     {
         return $b;
