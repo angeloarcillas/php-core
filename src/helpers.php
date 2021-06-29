@@ -43,11 +43,22 @@ if (!function_exists('view')) {
 if (!function_exists('request')) {
     function request(string $key = null)
     {
-      if(is_null($key)) {
-        return app('request');
-      }
-      
-      return app('request')->$key;
+        if (is_null($key)) {
+            return app('request');
+        }
+
+        return app('request')->$key;
+    }
+}
+
+/**
+ *  encode and echo
+ */
+if (!function_exists('e')) {
+    function e(string $str)
+    {
+        echo htmlspecialchars($str, ENT_QUOTES);
+        return;
     }
 }
 
