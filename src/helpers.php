@@ -55,7 +55,7 @@ if (!function_exists('request')) {
  *  Redirect
  */
 if (!function_exists('redirect')) {
-    function redirect(string $path, int $status = 302)
+    function redirect(?string $path, int $status = 302)
     {
         if (is_null($path)) {
             return app('router');
