@@ -2,48 +2,114 @@
 
 namespace Zeretei\PHPCore\Database;
 
-use \Zeretei\PHPCore\Database\QueryBuilder;
+use Zeretei\PHPCore\Application;
 
-class Migration extends QueryBuilder
+class Migration
 {
-    // protected function createTable()
-    // {
-    //     $sql = "CREATE TABLE IF NOT EXISTS migrations (
-    //         id INT AUTO_INCREMENT PRIMARY KEY,
-    //         migration VARCHAR(55),
-    //         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    //     )";
-    //     // execute
-    // }
-
-    public function apply()
+    /**
+     * Create table for applied migrations
+     */
+    protected function createMigrationsTable(): bool
     {
-        //? instead of creating own mig table, create a file same w/ other
-        // create migrations table
-        // get applied migrations
+        $sql = "CREATE TABLE IF NOT EXISTS migrations (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            migration VARCHAR(55),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )";
 
-        // scan dir for migration files
-        // filter applied migration
-
-        // loop through migration
-        // create instance
-        // call up method to apply migration
-
-        // check if any migration applied
-        // save migration file name
-        // else log no migration applied
+        return Application::get('database')->execute($sql);
     }
 
-    protected function getAppliedMigrations()
+    /**
+     * Apply all available migration
+     */
+    public function apply(): bool
+    {
+        // create migration table
+        $this->createMigrationsTable();
+
+        // get all applied migrations
+        $appliedMigrations = $this->getAppliedMigrations();
+
+        // scan dir for migrations
+        $path = app('path.database') . '/migrations';
+        $migrations = array_diff(scandir($path), ['.', '..']);
+
+        // filter migrated migrations
+        $toApplyMigrations = array_diff($migrations, $appliedMigrations);
+
+        // new applied migrations placeholder
+        $newMigrations = [];
+        foreach ($toApplyMigrations as $migration) {
+            // get class name of file
+            $class = $this->getClassname($migration);
+
+            // import migration file
+            $path = Application::getInstance()->get('path.database');
+            require_once $path . '/migrations/' . $migration;
+
+
+            // create class instance
+            $object = new $class();
+
+            // call up method from migration
+            $object->up();
+
+            // append applied migration
+            $newMigrations[] = $migration;
+        }
+
+        // save applied migration file name
+        $this->saveMigrations($newMigrations);
+
+        return true;
+    }
+
+    /**
+     * Get all applied migration
+     */
+    protected function getAppliedMigrations(): array
     {
         $sql = "SELECT migration FROM migrations";
-        // return all fetched migrations
+
+        // get all migration
+        $migrations = Application::get('database')->fetchAll($sql);
+        // convert to single column
+        return  array_map(fn ($i) => $i->migration, $migrations);
     }
 
-    protected function saveMigrations(array $newMigrations)
+    /**
+     * Save applied migrations
+     */
+    protected function saveMigrations(array $migrations): bool
     {
-        $migrations = "(mig1), (mig2), (mig3)...";
-        $sql = "INSERT INTO migrations (migration) VALUES $migrations";
-        // execute
+        // count applied migrations
+        $count = count($migrations);
+
+        // return if none
+        if ($count === 0) return false;
+
+        // set params
+        $params = trim(str_repeat("(?),", $count), ',');
+
+        $sql = "INSERT INTO migrations (migration) VALUES $params";
+
+        // save newly applied migration
+        return Application::get('database')->query($sql, $migrations);
+    }
+
+    /**
+     * Get class name of file
+     */
+    protected function getClassname(string $migration): string
+    {
+        // get filename w/out extension
+        $filename = pathinfo($migration, PATHINFO_FILENAME);
+        // remove migration version
+        $migration = array_slice(explode('_', $filename), 1);
+        // capitalize then join array
+        $className = implode('', array_map('ucfirst', $migration));
+        // return class name
+        return $className;
     }
 }
