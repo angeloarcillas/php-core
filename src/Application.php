@@ -6,6 +6,7 @@ use \Zeretei\PHPCore\Container;
 use \Zeretei\PHPCore\Http\Router;
 use \Zeretei\PHPCore\Http\Request;
 use \Zeretei\PHPCore\Http\Response;
+use \Zeretei\PHPCore\Database\QueryBuilder;
 
 /**
  * Application base class
@@ -35,22 +36,20 @@ class Application extends Container
     {
         static::$instance = $this;
         $this->ROOT_DIR = $config['root_dir'] ?? '/';
-        $this->bind('config', $config);
-        $this->registerServices();
+        $this->registerServices($config);
         $this->registerPath();
     }
 
     /**
      * Run application
      */
-    public function run()
+    public function run($uri, $method)
     {
         try {
             // start output buffer
             ob_start();
-
             // start router
-            $this->get('router')->resolve();
+            $this->get('router')->resolve($uri, $method);
 
             // echo output buffer
             echo ob_get_clean();
@@ -62,12 +61,14 @@ class Application extends Container
     /**
      * Register services to container
      */
-    protected function registerServices()
+    protected function registerServices($config)
     {
         $this->bind('app', $this);
+        $this->bind('config', $config);
         $this->bind('router', new Router());
         $this->bind('request', new Request());
         $this->bind('response', new Response());
+        $this->bind('database', new QueryBuilder($config['database']));
     }
 
     /**
@@ -79,5 +80,6 @@ class Application extends Container
         $this->bind('path.views', $this->ROOT_DIR . '/app/Views');
         $this->bind('path.models', $this->ROOT_DIR . '/app/Models');
         $this->bind('path.controllers', $this->ROOT_DIR . '/app/Controllers');
+        $this->bind('path.database', $this->ROOT_DIR . '/app/Database');
     }
 }
