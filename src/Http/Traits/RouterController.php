@@ -87,7 +87,12 @@ trait RouterController
             // call invoke method
             return $this->callInvoke($class);
         }
+        $class->setAction($action);
 
+
+        foreach ($class->getMiddlewares() as $middleware) {
+            $middleware->execute($action);
+        }
         // call action w/ params
         return $class->$action(...$this->attributes);
     }

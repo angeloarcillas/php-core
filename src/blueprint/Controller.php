@@ -9,6 +9,16 @@ abstract class Controller
 {
 
     /**
+     * Current router controller action executed
+     */
+    protected string $action;
+
+    /**
+     * @var \Zeretei\PHPCore\Blueprint\Middleware
+     */
+    protected array $middlewares = [];
+
+    /**
      * magic method to call undefined method
      */
     public function __call($method, $parameters)
@@ -19,5 +29,26 @@ abstract class Controller
             $method,
             static::class
         ));
+    }
+
+    protected function registerMiddleware($middleware)
+    {
+        $this->middlewares[] = $middleware;
+    }
+
+    /**
+     * Set router controller action
+     */
+    public function setAction(string $action): void
+    {
+        $this->action = $action;
+    }
+
+    /**
+     * Return all registered middlewares
+     */
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
     }
 }

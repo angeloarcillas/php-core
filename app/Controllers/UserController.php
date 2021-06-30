@@ -2,14 +2,20 @@
 
 namespace App\Controllers;
 
-use App\Models\User;
-use Zeretei\PHPCore\Blueprint\Controller;
+use \App\Middlewares\AuthMiddleware;
+use \App\Models\User;
+use \Zeretei\PHPCore\Blueprint\Controller;
 
 /**
  * TODO: Add error handling & refactor
  */
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->registerMiddleware(new AuthMiddleware(['edit']));
+    }
 
     public function __invoke()
     {

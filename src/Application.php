@@ -12,9 +12,8 @@ use \Zeretei\PHPCore\Database\QueryBuilder;
 /**
  * TODO:
  * 1. DRY on Views folder
- * 2. Add session
- * 3. Add logging
- * 4. Add events
+ * 2. Add logging
+ * 3. Add events
  * 
  * Application base class
  */
