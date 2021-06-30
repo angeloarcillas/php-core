@@ -82,9 +82,16 @@ abstract class Model
         return Application::get('database')->query($sql, array_values($params));
     }
 
-    // public function delete($params): bool
-    // {
-    // }
+    public function delete($id): bool
+    {
+        $sql = sprintf(
+            'DELETE FROM %s WHERE %s = ?',
+            $this->table,
+            $this->key
+        );
+
+        return Application::get('database')->query($sql, [$id]);
+    }
 
     public function select($id): object|false
     {

@@ -10,8 +10,9 @@ class UserController extends Controller
 
     public function __invoke()
     {
-        echo  "asd";
+        return  "__invoked";
     }
+
     public function index()
     {
         $user = new User();
@@ -44,11 +45,18 @@ class UserController extends Controller
         $user = $user->select($id);
         return view('users/edit', compact('user'));
     }
-    
+
     public function update($id)
     {
         $user = new User();
         $user = $user->update($id, request()->all());
+        return redirect('php-core/users');
+    }
+
+    public function destroy($id)
+    {
+        $user = new User();
+        $user = $user->delete($id);
         return redirect('php-core/users');
     }
 }
