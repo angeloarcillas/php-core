@@ -5,6 +5,9 @@ namespace App\Controllers;
 use App\Models\User;
 use Zeretei\PHPCore\Blueprint\Controller;
 
+/**
+ * TODO: Add error handling & refactor
+ */
 class UserController extends Controller
 {
 

@@ -2,6 +2,11 @@
 
 namespace Zeretei\PHPCore\Http;
 
+/**
+ * TODO:
+ * 1. Improve security
+ * 2. add request validation
+ */
 class Request
 {
     /**

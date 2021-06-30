@@ -2,6 +2,11 @@
 
 namespace Zeretei\PHPCore\Http\Traits;
 
+/**
+ * TODO:
+ * 1. Catch current method executed
+ * 2. Add authorization
+ */
 trait RouterController
 {
     /**

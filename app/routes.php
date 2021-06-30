@@ -1,7 +1,6 @@
 <?php
 
-use App\Controllers\UserController;
-use Zeretei\PHPCore\Database\Migration;
+use \App\Controllers\UserController;
 use \Zeretei\PHPCore\Http\Router;
 
 return function (Router $router) {
@@ -19,7 +18,7 @@ return function (Router $router) {
     $router->delete('/users/:int', [UserController::class, 'destroy']);
 
     $router->get('/migration', function () {
-        $migration = new Migration();
+        $migration = new \Zeretei\PHPCore\Database\Migration();
         return $migration->apply();
     });
 };

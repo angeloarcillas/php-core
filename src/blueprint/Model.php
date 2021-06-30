@@ -4,6 +4,9 @@ namespace Zeretei\PHPCore\Blueprint;
 
 use Zeretei\PHPCore\Application;
 
+/**
+ * Refactor
+ */
 abstract class Model
 {
     /**

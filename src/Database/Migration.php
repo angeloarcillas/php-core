@@ -4,6 +4,9 @@ namespace Zeretei\PHPCore\Database;
 
 use Zeretei\PHPCore\Application;
 
+/**
+ * TODO: Refactor
+ */
 class Migration
 {
     /**

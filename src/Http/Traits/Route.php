@@ -4,6 +4,9 @@ namespace Zeretei\PHPCore\Http\Traits;
 
 use Zeretei\PHPCore\Application;
 
+/**
+ * TODO: Add resourceful controller
+ */
 trait Route
 {
     /**
