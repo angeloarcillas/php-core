@@ -5,8 +5,21 @@ use \Zeretei\PHPCore\Http\Router;
 
 return function (Router $router) {
     $router->get('/', function () {
-        return view('welcome');
+        app('session')->setFlash('email', 'Email is required');
+        app('session')->setFlash('email2', 'Email is required2');
+        app('session')->setFlash('email3', 'Email is required3');
+        app('session')->setFlash('email4', 'Email is required4');
+        return redirect('/php-core/test');
+        // return view('welcome');
     });
+    $router->get('/test', function () {
+        ddd($_SESSION);
+        return redirect('/php-core/test-2');
+    });
+    $router->get('/test-2', function () {
+        ddd($_SESSION);
+    });
+
 
     // USERCONTROLLER
     $router->get('/users', [UserController::class, 'index']);

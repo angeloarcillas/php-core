@@ -3,19 +3,20 @@
 namespace Zeretei\PHPCore;
 
 use \Zeretei\PHPCore\Container;
+use \Zeretei\PHPCore\Session;
 use \Zeretei\PHPCore\Http\Router;
 use \Zeretei\PHPCore\Http\Request;
 use \Zeretei\PHPCore\Http\Response;
 use \Zeretei\PHPCore\Database\QueryBuilder;
 
 /**
- * Application base class
- * 
  * TODO:
  * 1. DRY on Views folder
  * 2. Add session
  * 3. Add logging
  * 4. Add events
+ * 
+ * Application base class
  */
 class Application extends Container
 {
@@ -74,6 +75,7 @@ class Application extends Container
         $this->bind('router', new Router());
         $this->bind('request', new Request());
         $this->bind('response', new Response());
+        $this->bind('session', new Session());
         $this->bind('database', new QueryBuilder($config['database']));
     }
 
