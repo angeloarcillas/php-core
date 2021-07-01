@@ -55,8 +55,11 @@ class Migration
             // create class instance
             $object = new $class();
 
-            // call up method from migration
-            $object->up();
+            // get sql
+            $sql = $object->up();
+
+            // run sql
+            Application::get('database')->execute($sql);
 
             // append applied migration
             $newMigrations[] = $migration;

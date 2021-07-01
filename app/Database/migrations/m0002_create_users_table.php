@@ -12,7 +12,8 @@ class CreateUsersTable
                 email varchar(55) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )";
-        Application::get('database')->execute($sql);
+
+        return $sql;
     }
 
     public function down()
