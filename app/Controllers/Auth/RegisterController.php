@@ -13,6 +13,6 @@ class RegisterController extends Controller
 
     public function register()
     {
-        
+        dd('hit');
     }    
 }

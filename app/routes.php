@@ -1,7 +1,8 @@
 <?php
 
-use \App\Controllers\UserController;
 use \Zeretei\PHPCore\Http\Router;
+use \App\Controllers\UserController;
+use \App\Controllers\Auth\RegisterController;
 
 return function (Router $router) {
     $router->get('/', function () {
@@ -20,7 +21,6 @@ return function (Router $router) {
         ddd($_SESSION);
     });
 
-
     // USERCONTROLLER
     $router->get('/users', [UserController::class, 'index']);
     $router->get('/users/create', [UserController::class, 'create']);
@@ -29,6 +29,11 @@ return function (Router $router) {
     $router->get('/users/:int/edit', [UserController::class, 'edit']);
     $router->put('/users/:int', [UserController::class, 'update']);
     $router->delete('/users/:int', [UserController::class, 'destroy']);
+
+
+    $router->get('/register', [RegisterController::class, 'registerForm']);
+    $router->post('/register', [RegisterController::class, 'register']);
+
 
     $router->get('/migration', function () {
         $migration = new \Zeretei\PHPCore\Database\Migration();
