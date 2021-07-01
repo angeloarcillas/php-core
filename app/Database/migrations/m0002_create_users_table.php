@@ -10,6 +10,7 @@ class CreateUsersTable
                 id int(55) AUTO_INCREMENT PRIMARY KEY,
                 username varchar(55),
                 email varchar(55) NOT NULL,
+                password varchar(255) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )";
 
