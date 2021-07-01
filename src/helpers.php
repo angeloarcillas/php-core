@@ -20,20 +20,33 @@ if (!function_exists('app')) {
  *  View
  */
 if (!function_exists('view')) {
-    function view(string $file, $params = [])
+    function view(string $path, $params = [])
     {
-        $path = app('path.views') . "/{$file}.view.php";
+        // convert user.settings to user/settings
+        $realSubPath = str_replace('.', '/', e($path));
+        // trim excess forward slash
+        $realPath = '/' . trim($realSubPath, '/');
+        
+        $path = app('path.views') . "/{$realPath}.view.php";
         $exists = file_exists($path);
 
         if (!$exists) {
             throw new \Exception(sprintf(
                 'File: "%s" does not exists on Views folder.',
-                $file,
+                $path,
             ));
         }
 
         extract($params);
         return require $path;
+    }
+}
+
+if (!function_exists('includes')) {
+    function includes($path)
+    {
+        $path = app('path.views') . "/includes/{$path}.view.php";
+        return require_once $path;
     }
 }
 
