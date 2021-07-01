@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\Auth\LoginController;
 use \Zeretei\PHPCore\Http\Router;
 use \App\Controllers\UserController;
 use \App\Controllers\Auth\RegisterController;
@@ -34,6 +35,8 @@ return function (Router $router) {
     $router->get('/register', [RegisterController::class, 'registerForm']);
     $router->post('/register', [RegisterController::class, 'register']);
 
+    $router->get('/login', [LoginController::class, 'loginForm']);
+    $router->post('/login', [LoginController::class, 'login']);
 
     $router->get('/migration', function () {
         $migration = new \Zeretei\PHPCore\Database\Migration();

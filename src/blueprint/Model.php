@@ -96,7 +96,7 @@ abstract class Model
         return Application::get('database')->query($sql, [$id]);
     }
 
-    public function select($id): object|false
+    public function select($id, $key = null): object|false
     {
         $sql = sprintf(
             "SELECT * FROM %s WHERE %s = ? LIMIT 1",
