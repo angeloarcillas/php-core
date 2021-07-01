@@ -2,8 +2,9 @@
 
 namespace Zeretei\PHPCore;
 
-use \Zeretei\PHPCore\Container;
+use \Zeretei\PHPCore\Log;
 use \Zeretei\PHPCore\Session;
+use \Zeretei\PHPCore\Container;
 use \Zeretei\PHPCore\Http\Router;
 use \Zeretei\PHPCore\Http\Request;
 use \Zeretei\PHPCore\Http\Response;
@@ -11,9 +12,8 @@ use \Zeretei\PHPCore\Database\QueryBuilder;
 
 /**
  * TODO:
- * 1. DRY on Views folder
- * 2. Add logging
- * 3. Add events
+ * 1. Add events
+ * 2. use proper exception w/ code
  * 
  * Application base class
  */
@@ -60,6 +60,13 @@ class Application extends Container
             // echo output buffer
             echo ob_get_clean();
         } catch (\Exception $e) {
+            $error = sprintf(
+                '[%s] %s  %s',
+                $e->getCode(),
+                $e->getFile() . PHP_EOL,
+                $e->getMessage()
+            );
+            Log::set($error);
             ddd($e);
         }
     }
@@ -75,6 +82,7 @@ class Application extends Container
         $this->bind('request', new Request());
         $this->bind('response', new Response());
         $this->bind('session', new Session());
+        $this->bind('log', new Log());
         $this->bind('database', new QueryBuilder($config['database']));
     }
 

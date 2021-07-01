@@ -1,8 +1,8 @@
 <?php
 
-use App\Controllers\Auth\LoginController;
 use \Zeretei\PHPCore\Http\Router;
 use \App\Controllers\UserController;
+use App\Controllers\Auth\LoginController;
 use \App\Controllers\Auth\RegisterController;
 
 return function (Router $router) {
@@ -22,7 +22,7 @@ return function (Router $router) {
         ddd($_SESSION);
     });
 
-    // USERCONTROLLER
+    // USER CONTROLLER
     $router->get('/users', [UserController::class, 'index']);
     $router->get('/users/create', [UserController::class, 'create']);
     $router->post('/users', [UserController::class, 'store']);
@@ -31,10 +31,11 @@ return function (Router $router) {
     $router->put('/users/:int', [UserController::class, 'update']);
     $router->delete('/users/:int', [UserController::class, 'destroy']);
 
-
+    // REGISTER CONTROLLER
     $router->get('/register', [RegisterController::class, 'registerForm']);
     $router->post('/register', [RegisterController::class, 'register']);
 
+    // LOGIN CONTROLLER
     $router->get('/login', [LoginController::class, 'loginForm']);
     $router->post('/login', [LoginController::class, 'login']);
 
