@@ -6,5 +6,5 @@ use \Zeretei\PHPCore\Blueprint\Model;
 
 class User extends Model
 {
-    protected array $fillable = ['username', 'email'];
+    protected array $fillable = ['username', 'email', 'password'];
 }
