@@ -38,6 +38,8 @@ return function (Router $router) {
     $router->get('/login', [LoginController::class, 'loginForm']);
     $router->post('/login', [LoginController::class, 'login']);
 
+    $router->get('/logout', fn () => session_destroy());
+
     $router->get('/migration', function () {
         $migration = new \Zeretei\PHPCore\Database\Migration();
         return $migration->apply();

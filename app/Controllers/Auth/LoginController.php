@@ -29,6 +29,8 @@ class LoginController extends Controller
             return redirect()->back();
         }
 
+        app('session')->set('auth', $user->id);
+
         return redirect('/php-core/users');
     }
 }

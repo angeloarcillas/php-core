@@ -10,7 +10,9 @@ class AuthMiddleware extends Middleware
     public function execute(string $action)
     {
         if (in_array($action, $this->getActions())) {
-            throw new \Exception("403 - Unauthorized");
+           if (! app('session')->get('auth')) {
+               throw new \Exception("403 - Unauthorized. Please login or register.");
+           }
         }
     }
 }

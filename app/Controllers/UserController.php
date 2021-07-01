@@ -14,7 +14,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->registerMiddleware(new AuthMiddleware(['edit']));
+        $this->registerMiddleware(new AuthMiddleware(['index', 'edit', 'show']));
     }
 
     public function __invoke()

@@ -30,6 +30,11 @@ class RegisterController extends Controller
             app('session')->setFlash('register', 'Failed creating user.');
             return redirect()->back();
         }
+
+        $user = $user->select($attributes['email'], 'email');
+
+        app('session')->set('auth', $user->id);
+
         return redirect('/php-core/users');
     }
 }
