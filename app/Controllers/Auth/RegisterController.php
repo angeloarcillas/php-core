@@ -15,10 +15,11 @@ class RegisterController extends Controller
     {
         $request = app('request');
         $request->validate([
-            'username' => 'required|min:5|max:25',
+            'username' => 'required|min:5|max:55',
             'email' => ['required', 'email'],
-            'password' => ['confirm']
+            'password' => ['min:8', 'confirm']
         ]);
-        dd('a');
+        
+        
     }
 }

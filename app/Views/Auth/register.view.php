@@ -1,10 +1,12 @@
 <?php includes('header') ?>
 
-<div class="w-1/3 p-4 mx-auto border">
+<div class="w-1/3 p-4 mx-auto border rounded">
 
     <div class="mb-6">
         <h2 class="text-4xl font-bold">Register Form</h2>
     </div>
+
+    <?php includes('errors')?>
 
     <form action="/php-core/register" method="POST">
         <!-- USERNAME -->
