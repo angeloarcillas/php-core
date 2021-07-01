@@ -13,7 +13,8 @@ class Session
 
     public function __construct()
     {
-        $this->toFlush();
+        $_SESSION[static::FLASH_KEY] = [];
+        $_SESSION[static::ERROR_KEY] = [];
     }
 
     /**
@@ -21,10 +22,7 @@ class Session
      */
     public function setFlash(string $key, string $message): void
     {
-        $_SESSION[static::FLASH_KEY][$key] = [
-            'value' => $message,
-            'remove' => false
-        ];
+        $_SESSION[static::FLASH_KEY][$key] = $message;
     }
 
     /**
@@ -32,7 +30,7 @@ class Session
      */
     public function getFlash(string $key): string
     {
-        return $_SESSION[static::FLASH_KEY][$key]['value'] ?? null;
+        return $_SESSION[static::FLASH_KEY][$key] ?? null;
     }
 
     /**
@@ -48,10 +46,7 @@ class Session
      */
     public function setErrorFlash(string $key, string $message): void
     {
-        $_SESSION[static::ERROR_KEY][$key] = [
-            'value' => $message,
-            'remove' => false
-        ];
+        $_SESSION[static::ERROR_KEY][$key] = $message;
     }
 
     /**
@@ -59,7 +54,7 @@ class Session
      */
     public function getErrorFlash(string $key): string
     {
-        return $_SESSION[static::ERROR_KEY][$key]['value'] ?? null;
+        return $_SESSION[static::ERROR_KEY][$key] ?? null;
     }
 
     /**
@@ -94,47 +89,21 @@ class Session
         return $_SESSION ?? [];
     }
 
+
     /**
      * !FIXME: repeated statement
-     * 
-     * Convert flash sessions to removable
-     */
-    protected function toFlush()
-    {
-        if (isset($_SESSION[static::FLASH_KEY])) {
-            foreach ($_SESSION[static::FLASH_KEY] as $_ => &$message) {
-                $message['remove'] = true;
-            }
-        }
-
-        if (isset($_SESSION[static::ERROR_KEY])) {
-            foreach ($_SESSION[static::ERROR_KEY] as $_ => &$message) {
-                $message['remove'] = true;
-            }
-        }
-    }
-
-    /**
      * TODO: Reseach about removing own item on loop
      * 
      * Flush all removable flash sessions
      */
     protected function flush()
     {
-        if (isset($_SESSION[static::FLASH_KEY])) {
-            foreach ($_SESSION[static::FLASH_KEY] as $key => &$message) {
-                if ($message['remove']) {
-                    unset($_SESSION[static::FLASH_KEY][$key]);
-                }
-            }
+        foreach ($_SESSION[static::FLASH_KEY] as $key => &$message) {
+            unset($_SESSION[static::FLASH_KEY][$key]);
         }
 
-        if (isset($_SESSION[static::ERROR_KEY])) {
-            foreach ($_SESSION[static::ERROR_KEY] as $key => &$message) {
-                if ($message['remove']) {
-                    unset($_SESSION[static::ERROR_KEY][$key]);
-                }
-            }
+        foreach ($_SESSION[static::ERROR_KEY] as $key => &$message) {
+            unset($_SESSION[static::ERROR_KEY][$key]);
         }
     }
 
