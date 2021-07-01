@@ -26,7 +26,7 @@ if (!function_exists('view')) {
         $realSubPath = str_replace('.', '/', e($path));
         // trim excess forward slash
         $realPath = '/' . trim($realSubPath, '/');
-        
+
         $path = app('path.views') . "/{$realPath}.view.php";
         $exists = file_exists($path);
 
@@ -68,7 +68,7 @@ if (!function_exists('request')) {
  *  Redirect
  */
 if (!function_exists('redirect')) {
-    function redirect(?string $path, int $status = 302)
+    function redirect(string $path = null, int $status = 302)
     {
         if (is_null($path)) {
             return app('router');
