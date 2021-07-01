@@ -13,6 +13,12 @@ class RegisterController extends Controller
 
     public function register()
     {
-        dd('hit');
-    }    
+        $request = app('request');
+        $request->validate([
+            'username' => 'required|min:5|max:25',
+            'email' => ['required', 'email'],
+            'password' => ['confirm']
+        ]);
+        dd('a');
+    }
 }

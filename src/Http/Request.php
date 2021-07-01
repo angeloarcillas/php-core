@@ -2,6 +2,8 @@
 
 namespace Zeretei\PHPCore\Http;
 
+use \Zeretei\PHPCore\Http\Traits\Validator;
+
 /**
  * TODO:
  * 1. Improve security
@@ -9,6 +11,8 @@ namespace Zeretei\PHPCore\Http;
  */
 class Request
 {
+
+    use Validator;
     /**
      * attributes placeholder
      * 
@@ -93,6 +97,23 @@ class Request
         }
 
         return $this->attributes[$key];
+    }
+
+    /**
+     * TODO: add security & refactor
+     * Get a request based on request method
+     */
+    public static function request($key)
+    {
+        if (static::method() === 'POST') {
+            return $_POST[$key] ?? null;
+        }
+
+        if (static::method() === 'GET') {
+            return $_GET[$key] ?? null;
+        }
+
+        return null;
     }
 
     public function all()

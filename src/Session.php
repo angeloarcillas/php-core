@@ -7,7 +7,9 @@ namespace Zeretei\PHPCore;
  */
 class Session
 {
-    protected const FLASH_KEY = 'FLASH_MESSAGE';
+
+    protected const FLASH_KEY = 'flash_bag';
+    protected const ERROR_KEY = 'error_bag';
 
     public function __construct()
     {
@@ -36,9 +38,36 @@ class Session
     /**
      * Return all flash session
      */
-    public function getAllFlash(): array
+    public function flashBag(): array
     {
         return $_SESSION[static::FLASH_KEY] ?? [];
+    }
+
+    /**
+     * Set a error flash session
+     */
+    public function setErrorFlash(string $key, string $message): void
+    {
+        $_SESSION[static::ERROR_KEY][$key] = [
+            'value' => $message,
+            'remove' => false
+        ];
+    }
+
+    /**
+     * Return a error flash session
+     */
+    public function getErrorFlash(string $key): string
+    {
+        return $_SESSION[static::ERROR_KEY][$key]['value'] ?? null;
+    }
+
+    /**
+     * Return all error flash session
+     */
+    public function errorBag(): array
+    {
+        return $_SESSION[static::ERROR_KEY] ?? [];
     }
 
     /**
@@ -66,12 +95,20 @@ class Session
     }
 
     /**
+     * !FIXME: repeated statement
+     * 
      * Convert flash sessions to removable
      */
     protected function toFlush()
     {
         if (isset($_SESSION[static::FLASH_KEY])) {
             foreach ($_SESSION[static::FLASH_KEY] as $_ => &$message) {
+                $message['remove'] = true;
+            }
+        }
+
+        if (isset($_SESSION[static::ERROR_KEY])) {
+            foreach ($_SESSION[static::ERROR_KEY] as $_ => &$message) {
                 $message['remove'] = true;
             }
         }
@@ -88,6 +125,14 @@ class Session
             foreach ($_SESSION[static::FLASH_KEY] as $key => &$message) {
                 if ($message['remove']) {
                     unset($_SESSION[static::FLASH_KEY][$key]);
+                }
+            }
+        }
+
+        if (isset($_SESSION[static::ERROR_KEY])) {
+            foreach ($_SESSION[static::ERROR_KEY] as $key => &$message) {
+                if ($message['remove']) {
+                    unset($_SESSION[static::ERROR_KEY][$key]);
                 }
             }
         }
