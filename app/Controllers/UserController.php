@@ -45,7 +45,7 @@ class UserController extends Controller
     {
         $user = new User();
         $user = $user->insert(request()->all());
-        dd($user);
+        return redirect('php-core/users');
     }
 
     public function edit($id)
