@@ -126,7 +126,7 @@ trait Validator
     protected function max(string $request, string $value): bool
     {
         // check if value has non numeric character
-        if ($this->isNumeric($value)) {
+        if (!$this->isNumeric($value)) {
             throw new \Exception('Rule "max" must not contain a non numerical value.');
         }
 
