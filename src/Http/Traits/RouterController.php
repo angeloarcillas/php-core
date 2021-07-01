@@ -91,7 +91,7 @@ trait RouterController
 
 
         foreach ($class->getMiddlewares() as $middleware) {
-            $middleware->execute($action);
+            $middleware->execute($action, ...$this->attributes);
         }
         // call action w/ params
         return $class->$action(...$this->attributes);
