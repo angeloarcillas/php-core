@@ -123,4 +123,17 @@ class Router
     {
         return in_array($method, static::$verbs);
     }
+
+    /**
+     * Redirect back to previous url
+     */
+    public function back(): void
+    {
+        // check if previous uri exist
+        if (!headers_sent() && isset($_SERVER["HTTP_REFERER"])) {
+            // redirect to previous url
+            header("location: {$_SERVER["HTTP_REFERER"]}", true, 302);
+            exit;
+        }
+    }
 }
