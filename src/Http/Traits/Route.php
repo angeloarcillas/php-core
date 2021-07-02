@@ -15,7 +15,7 @@ trait Route
     public function load(string $file)
     {
         $routes = require_once $file;
-        $routes(Application::getInstance()->get('router'));
+        $routes(Application::get('router'));
     }
 
     /**
