@@ -26,10 +26,7 @@ class Response
     public const HTTP_SERVICE_UNAVAILABLE = 503;
 
     /**
-     * Check if valid HTTP status code
-     * 
-     * @param int $code
-     * @return bool
+     * Check if HTTP status code is valid
      */
     public static function isValidCode(int $code): bool
     {
@@ -38,36 +35,26 @@ class Response
 
     /**
      * Set response HTTP status code
-     * 
-     * @param int $code
-     * @return void
      */
     public static function setStatusCode(int $code): void
     {
-        // check if $code is a valid http status code
         if (!static::isValidCode($code)) {
-            throw new \Exception(sprintf('The HTTP status code "%s"', $code));
+            throw new \Exception(
+                sprintf('The HTTP status code "%s"', $code)
+            );
         }
 
-        // set response code
         http_response_code($code);
     }
 
     /**
      * Redirect
-     * 
-     * @param string $path
-     * @param int $status
      */
     public function redirect(string $path, int $status = self::HTTP_FOUND)
     {
-        // check if any header already sent
         if (!headers_sent()) {
-            // convert dot to forward slash
             $realSubPath = str_replace('.', '/', $path);
-            // trim excess forward slash
             $realPath = trim($realSubPath, '/');
-            // redirect
             header("location:/{$realPath}", true, $status);
             exit;
         }
