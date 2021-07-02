@@ -2,22 +2,17 @@
 
 namespace Zeretei\PHPCore\Database;
 
-/**
- * TODO: Add error handling
- */
 class QueryBuilder
 {
     /**
      * PDO instnace
-     * 
-     * @var \PDO
      */
     protected \PDO $pdo;
 
     /**
      * Establish connection
      */
-    public function __construct($config)
+    public function __construct(array $config)
     {
         $this->pdo = new \PDO(
             $config['connection'] . ';dbname=' . $config['name'],
@@ -30,7 +25,7 @@ class QueryBuilder
     /**
      * Query a SQL statement
      */
-    public function query($sql, $params = []): bool
+    public function query(string $sql, array $params = []): bool
     {
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute($params);
@@ -39,7 +34,7 @@ class QueryBuilder
     /**
      * Fetch a single row from database
      */
-    public function fetch($sql, $params = []): mixed
+    public function fetch(string $sql, array $params = []): mixed
     {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
