@@ -3,55 +3,44 @@
 namespace Zeretei\PHPCore;
 
 /**
- * Service cointainer for application
+ * Service cointainer for application 
  */
 class Container
 {
     /**
      * Container instance
-     * 
-     * @var self
      */
     protected static $instance;
 
     /**
-     * data placeholder
-     * 
-     *  @var array
+     * services placeholder
      */
     protected static array $registry = [];
 
     /**
-     * Bind value to container
-     * 
-     * @param string $key
-     * @param mixed $value
+     * Register service to the container
      */
     public static function bind(string $key, mixed $value): void
     {
-        // bind a value to container
         static::$registry[$key] = $value;
     }
 
     /**
-     * Get value from container
-     * 
-     * @param string
-     * @return mixed 
+     * Get a service from the container
      */
     public static function get(string $key): mixed
     {
-        // check if value exist on contaienr
         if (!array_key_exists($key, static::$registry)) {
-            throw new \Exception("No {$key} is bound in the container.");
+            throw new \Exception(
+                sprintf('No "%s" is registed in the container.', $key)
+            );
         }
 
-        // return value from container
         return static::$registry[$key];
     }
 
     /**
-     * All bind services
+     * All registed services
      */
     public static function all()
     {
@@ -63,13 +52,10 @@ class Container
      */
     public static function getInstance()
     {
-        // check if instance is null
         if (is_null(static::$instance)) {
-            // set instance
             static::$instance = new static;
         }
 
-        // return instance
         return static::$instance;
     }
 }
