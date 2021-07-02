@@ -2,13 +2,20 @@
 
 namespace Zeretei\PHPCore;
 
-/**
- * TODO: Sanitize session
- */
 class Session
 {
-
+    /**
+     * Session flash messages key
+     * 
+     * @var string
+     */
     protected const FLASH_KEY = 'flash_bag';
+
+    /**
+     * Session error messages key
+     * 
+     * @var string
+     */
     protected const ERROR_KEY = 'error_bag';
 
     public function __construct()
@@ -21,6 +28,8 @@ class Session
      */
     public function setFlash(string $key, string $message): void
     {
+        $message = filter_var($message, FILTER_SANITIZE_STRING);
+
         $_SESSION[static::FLASH_KEY][$key] = [
             'value' => $message,
             'remove' => false
@@ -36,11 +45,17 @@ class Session
     }
 
     /**
-     * Return all flash session
+     * Return all flash session - key & value only
      */
     public function flashBag(): array
     {
-        return $_SESSION[static::FLASH_KEY] ?? [];
+        $flash =  $_SESSION[static::FLASH_KEY] ?? [];
+
+        foreach ($flash as $key => $value) {
+            $flash[$key] = $value['value'];
+        }
+
+        return $flash;
     }
 
     /**
@@ -48,6 +63,8 @@ class Session
      */
     public function setErrorFlash(string $key, string $message): void
     {
+        $message = filter_var($message, FILTER_SANITIZE_STRING);
+
         $_SESSION[static::ERROR_KEY][$key] = [
             'value' => $message,
             'remove' => false
@@ -63,7 +80,7 @@ class Session
     }
 
     /**
-     * Return all error flash session
+     * Return all error flash session - key & value only
      */
     public function errorBag(): array
     {
@@ -84,6 +101,10 @@ class Session
      */
     public function set(string $key, mixed $value): void
     {
+        if (is_string($value)) {
+            $value = filter_var($value, FILTER_SANITIZE_STRING);
+        }
+
         $_SESSION[$key] = $value;
     }
 
@@ -104,12 +125,9 @@ class Session
     }
 
     /**
-     * !FIXME: repeated statement
-     * TODO: learn why property remove is need
-     * 
-     * Convert flash sessions to removable
+     * Convert all flash sessions to removable
      */
-    protected function toFlush()
+    protected function toFlush(): void
     {
         if (isset($_SESSION[static::FLASH_KEY])) {
             foreach ($_SESSION[static::FLASH_KEY] as $_ => &$message) {
@@ -125,11 +143,9 @@ class Session
     }
 
     /**
-     * TODO: Reseach about removing own item on loop
-     * 
      * Flush all removable flash sessions
      */
-    protected function flush()
+    protected function flush(): void
     {
         if (isset($_SESSION[static::FLASH_KEY])) {
             foreach ($_SESSION[static::FLASH_KEY] as $key => &$message) {
