@@ -40,6 +40,14 @@ class Container
     }
 
     /**
+     * check if $key exist in the container
+     */
+    public static function exitst(string $key): bool
+    {
+        return array_key_exists($key, static::$registry);
+    }
+
+    /**
      * All registed services
      */
     public static function all()
