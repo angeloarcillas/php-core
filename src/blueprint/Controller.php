@@ -19,11 +19,10 @@ abstract class Controller
     protected array $middlewares = [];
 
     /**
-     * magic method to call undefined method
+     * Throw error when method does not exists
      */
     public function __call($method, $parameters)
     {
-        // thorw error since method does not exists
         throw new \Exception(sprintf(
             'Method: "%s()" does not exists on %s.',
             $method,
@@ -31,6 +30,9 @@ abstract class Controller
         ));
     }
 
+    /**
+     * Register a middleware
+     */
     protected function registerMiddleware($middleware)
     {
         $this->middlewares[] = $middleware;
