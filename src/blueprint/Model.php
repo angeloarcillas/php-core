@@ -4,9 +4,6 @@ namespace Zeretei\PHPCore\Blueprint;
 
 use Zeretei\PHPCore\Application;
 
-/**
- * Refactor
- */
 abstract class Model
 {
     /**
@@ -26,7 +23,6 @@ abstract class Model
 
     public function __construct()
     {
-        // set table
         if (!isset($this->table)) {
             $this->table = $this->getBaseClassname() . 's';
         }
@@ -37,16 +33,11 @@ abstract class Model
      */
     public function insert(array $params): bool
     {
-        // filter request with $fillable
         $params = $this->filter($params);
 
-        // set column names
         $columns = implode(',', array_keys($params));
-
-        // set column values placeholder
         $values = trim(str_repeat('?,', count($params)), ',');
 
-        // sql statement
         $sql = sprintf(
             'INSERT INTO %s (%s) VALUES (%s)',
             $this->table,
@@ -57,34 +48,31 @@ abstract class Model
         return Application::get('database')->query($sql, array_values($params));
     }
 
+    /**
+     * Execute update SQL statement
+     */
     public function update($id, $params): bool
     {
-        // filter request with $fillable
         $params = $this->filter($params);
 
-        // set column names
         $keys = array_keys($params);
-
-        // set column values placeholder
         $set = trim(implode('=?,', $keys) . '=?', ',');
-
-        // check if user defined a key
         $key = [$this->key => $id];
+        $params[] = current($key);
 
-        // sql statement
         $sql = sprintf(
             'UPDATE %s SET %s WHERE %s = ?',
             $this->table,
             $set,
-            key($key) // get $key key
+            key($key)
         );
-
-        // append $key value
-        $params[] = current($key);
 
         return Application::get('database')->query($sql, array_values($params));
     }
 
+    /**
+     * Execute delete SQL statement
+     */
     public function delete($id): bool
     {
         $sql = sprintf(
@@ -96,6 +84,9 @@ abstract class Model
         return Application::get('database')->query($sql, [$id]);
     }
 
+    /**
+     * Execute Select SQL statement
+     */
     public function select($id, $key = null): object|false
     {
         $sql = sprintf(
@@ -107,6 +98,9 @@ abstract class Model
         return Application::get('database')->fetch($sql, [$id]);
     }
 
+    /**
+     * Execute select all SQL statement
+     */
     public function all(): array
     {
         $sql = "SELECT * FROM {$this->table}";
@@ -115,7 +109,6 @@ abstract class Model
 
     /**
      * Filter $request with $this->fillable
-     * Returns all request that can be filled
      */
     protected function filter(array $params): array
     {
@@ -124,13 +117,8 @@ abstract class Model
         }
 
         return array_filter(
-            // request
             $params,
-
-            // arrow function | return fillable requests
             fn ($_, $key) => in_array($key, $this->fillable),
-
-            // use array keys & values
             ARRAY_FILTER_USE_BOTH
         );
     }
