@@ -44,6 +44,7 @@ class Application extends Container
         static::$instance = $this;
         $this->ROOT_DIR = $config['root_dir'] ?? '/';
         $this->registerServices($config);
+        $this->registerPaths($config);
     }
 
     /**
@@ -56,9 +57,9 @@ class Application extends Container
             ob_start();
             $this->get('router')->resolve($uri, $method);
             echo ob_get_clean();
-
         } catch (\Exception $e) {
-            $error = sprintf('[%s] %s  %s',
+            $error = sprintf(
+                '[%s] %s  %s',
                 $e->getCode(),
                 $e->getFile() . PHP_EOL,
                 $e->getMessage()
@@ -85,5 +86,14 @@ class Application extends Container
 
         $this->bind('session', new Session());
         $this->bind('log', new Log());
+    }
+
+    /**
+     * Register paths to the container
+     */
+    protected function registerPaths(array $config)
+    {
+        $this->bind('path.routes', $config['path.routes'] ?? '/');
+        $this->bind('path.databases', $config['path.databases'] ?? '/');
     }
 }
