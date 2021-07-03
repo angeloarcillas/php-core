@@ -82,7 +82,9 @@ class Application extends Container
         $this->bind('request', new Request());
         $this->bind('response', new Response());
 
-        $this->bind('database', new QueryBuilder($config['database']));
+        if (isset($config['database'])) {
+            $this->bind('database', new QueryBuilder($config['database']));
+        }
 
         $this->bind('session', new Session());
         $this->bind('log', new Log());
