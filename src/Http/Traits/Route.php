@@ -2,11 +2,6 @@
 
 namespace Zeretei\PHPCore\Http\Traits;
 
-use Zeretei\PHPCore\Application;
-
-/**
- * TODO: Add resourceful controller
- */
 trait Route
 {
     /**
@@ -14,8 +9,15 @@ trait Route
      */
     public function load(string $file)
     {
+        if (!file_exists($file)) {
+            throw new \Exception(
+                sprintf('File: "%s" does not exists.', $file)
+            );
+        }
+
         $routes = require_once $file;
-        $routes(Application::get('router'));
+        $routes($this);
+        return $this;
     }
 
     /**
@@ -33,7 +35,7 @@ trait Route
     {
         $this->addRoute('POST', $url, $controller);
     }
-    
+
     /**
      * PATCH request
      */

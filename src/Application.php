@@ -55,8 +55,14 @@ class Application extends Container
         try {
             // start routing
             ob_start();
-            $this->get('router')->resolve($uri, $method);
+
+            $this->get('router')
+                ->load($this->get('path.routes'))
+                ->resolve($uri, $method);
+
             echo ob_get_clean();
+            exit;
+
         } catch (\Exception $e) {
             $error = sprintf(
                 '[%s] %s  %s',
