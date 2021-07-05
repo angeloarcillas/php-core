@@ -51,7 +51,7 @@ abstract class Model
     /**
      * Execute update SQL statement
      */
-    public function update($id, $params): bool
+    public function update(string|int $id, array $params): bool
     {
         $params = $this->filter($params);
 
@@ -73,12 +73,12 @@ abstract class Model
     /**
      * Execute delete SQL statement
      */
-    public function delete($id): bool
+    public function delete(string|int $id, $key = null): bool
     {
         $sql = sprintf(
             'DELETE FROM %s WHERE %s = ?',
             $this->table,
-            $this->key
+            $key ?? $this->key
         );
 
         return Application::get('database')->query($sql, [$id]);
@@ -87,7 +87,7 @@ abstract class Model
     /**
      * Execute Select SQL statement
      */
-    public function select($id, $key = null): object|false
+    public function select(string|int $id, $key = null): object|false
     {
         $sql = sprintf(
             "SELECT * FROM %s WHERE %s = ? LIMIT 1",
@@ -124,7 +124,7 @@ abstract class Model
     }
 
     /**
-     * Get base classname
+     * Filename  to plural classname
      */
     protected function getBaseClassname(): string
     {
