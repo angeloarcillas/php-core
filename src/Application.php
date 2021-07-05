@@ -44,7 +44,6 @@ class Application extends Container
         static::$instance = $this;
         $this->ROOT_DIR = $config['root_dir'] ?? '/';
         $this->registerServices($config);
-        $this->registerPaths($config);
     }
 
     /**
@@ -64,12 +63,12 @@ class Application extends Container
             exit;
 
         } catch (\Exception $e) {
-            $error = sprintf(
-                '[%s] %s  %s',
+            $error = sprintf('[%s] %s  %s',
                 $e->getCode(),
                 $e->getFile() . PHP_EOL,
                 $e->getMessage()
             );
+
             Log::set($error);
 
             ddd($e);
@@ -81,27 +80,19 @@ class Application extends Container
      */
     protected function registerServices(array $config)
     {
-        $this->bind('app', $this);
         $this->bind('config', $config);
 
         $this->bind('router', new Router());
         $this->bind('request', new Request());
         $this->bind('response', new Response());
 
-        if (isset($config['database'])) {
-            $this->bind('database', new QueryBuilder($config['database']));
+        $db = $config['database'] ?? [];
+
+        if (!empty($db)) {
+            $this->bind('database', new QueryBuilder($db));
         }
 
         $this->bind('session', new Session());
         $this->bind('log', new Log());
-    }
-
-    /**
-     * Register paths to the container
-     */
-    protected function registerPaths(array $config)
-    {
-        $this->bind('path.routes', $config['path.routes'] ?? '/');
-        $this->bind('path.databases', $config['path.databases'] ?? '/');
     }
 }
