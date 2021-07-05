@@ -20,6 +20,8 @@
   </a>
 </p>
 
+> See setup branch for actual usage
+
 ## Setup
 
 ```php
