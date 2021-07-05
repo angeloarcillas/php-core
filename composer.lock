@@ -1,0 +1,63 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "7d96d710d674f9c6ff4de1b51c07f2ce",
+    "packages": [
+        {
+            "name": "zeretei/php-core",
+            "version": "v0.1.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zerexei/php-core.git",
+                "reference": "67d5c835cceee76bf81f1a2f6a6cddc6be045089"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zerexei/php-core/zipball/67d5c835cceee76bf81f1a2f6a6cddc6be045089",
+                "reference": "67d5c835cceee76bf81f1a2f6a6cddc6be045089",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zeretei\\PHPCore\\": "src/",
+                    "App\\": "app"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Angelo Arcillas",
+                    "email": "angeloarcillas64@gmail.com"
+                }
+            ],
+            "description": "simple php mvc framework",
+            "support": {
+                "issues": "https://github.com/zerexei/php-core/issues",
+                "source": "https://github.com/zerexei/php-core/tree/v0.1.0"
+            },
+            "time": "2021-07-05T05:11:19+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "zeretei/php-core": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
+}
