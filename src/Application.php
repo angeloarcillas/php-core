@@ -37,7 +37,7 @@ class Application extends Container
     public const ROOT_DIR = '/';
 
     /**
-     * Register all application default configs & services
+     * Register all the application default configs & services
      */
     public function __construct(array $config = null)
     {
@@ -76,7 +76,7 @@ class Application extends Container
     }
 
     /**
-     * Register services to the container
+     * Register the services to the container
      */
     protected function registerServices(array $config)
     {
