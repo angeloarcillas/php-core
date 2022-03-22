@@ -24,7 +24,7 @@ abstract class Model
     public function __construct()
     {
         if (!isset($this->table)) {
-            $this->table = strtolower($this->getBaseClassname() . 's');
+            $this->table = $this->getBaseClassname() . 's';
         }
     }
 
