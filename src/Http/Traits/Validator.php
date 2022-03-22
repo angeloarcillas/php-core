@@ -191,7 +191,7 @@ trait Validator
     }
 
     /**
-     * Set session errors
+     * Set the session errors
      */
     protected function error(string $key, array $params = [])
     {
