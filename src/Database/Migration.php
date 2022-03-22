@@ -19,10 +19,10 @@ class Migration
             throw new \Exception("Please setup a migration path.");
         }
 
+        // TODO: rename $path to a more informative name ($migration_dir_path)
         $path = Application::get('path.databases') . '/migrations';
 
-        //? change to "OR" logic operator
-        if (!file_exists($path) && !is_dir($path)) {
+        if (!file_exists($path) || !is_dir($path)) {
             throw new \Exception(
                 sprintf('Directory: "%s" does not exists.', $path)
             );
@@ -38,8 +38,7 @@ class Migration
         $newMigrations = [];
 
         foreach ($toApplyMigrations as $migration) {
-            $path = Application::get('path.databases');
-            require_once $path . '/migrations/' . $migration;
+            require_once $path ."/". $migration;
 
             $class = $this->getClassname($migration);
 
