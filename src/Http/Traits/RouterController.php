@@ -24,7 +24,7 @@ trait RouterController
     }
 
     /**
-     * Match request url with wildcard route
+     * Match the request url with the wildcard route
      */
     protected function matchWildcard(string $route, string $url): bool
     {
@@ -33,6 +33,8 @@ trait RouterController
         $regex = str_replace($searches, $replaces, $route);
 
         if (preg_match("#^{$regex}$#", $url, $values)) {
+            //! NOTE: this can be bad since it depends on Router class
+            //? create an interface to fix this issue
             $this->attributes = array_slice($values, 1);
             return true;
         }
@@ -70,6 +72,8 @@ trait RouterController
 
     /**
      * Call __invoke magic method
+     *
+     * ? instead of object type, create an interface for model
      */
     protected function callInvoke(object $class): mixed
     {

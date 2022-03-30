@@ -7,7 +7,7 @@ use \Zeretei\PHPCore\Application;
 class Migration
 {
     /**
-     * Apply all available migration
+     * Apply all the available migration
      */
     public function apply()
     {
@@ -19,11 +19,12 @@ class Migration
             throw new \Exception("Please setup a migration path.");
         }
 
-        $dir = Application::get('path.databases') . '/migrations';
+        // TODO: rename $path to a more informative name ($migration_dir_path)
+        $path = Application::get('path.databases') . '/migrations';
 
-        if (!file_exists($dir) && !is_dir($dir)) {
+        if (!file_exists($path) || !is_dir($path)) {
             throw new \Exception(
-                sprintf('Directory: "%s" does not exists.', $dir)
+                sprintf('Directory: "%s" does not exists.', $path)
             );
         }
 
@@ -31,15 +32,13 @@ class Migration
 
         $appliedMigrations = $this->getAppliedMigrations();
 
-        $path = Application::get('path.databases') . '/migrations';
         $migrations = array_diff(scandir($path), ['.', '..']);
         $toApplyMigrations = array_diff($migrations, $appliedMigrations);
 
         $newMigrations = [];
 
         foreach ($toApplyMigrations as $migration) {
-            $path = Application::get('path.databases');
-            require_once $path . '/migrations/' . $migration;
+            require_once $path ."/". $migration;
 
             $class = $this->getClassname($migration);
 

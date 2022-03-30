@@ -19,7 +19,7 @@ abstract class Controller
     protected array $middlewares = [];
 
     /**
-     * Throw error when method does not exists
+     * Throw an error when a method does not exists
      */
     public function __call($method, $parameters)
     {
@@ -47,7 +47,7 @@ abstract class Controller
     }
 
     /**
-     * Return all registered middlewares
+     * Return all the registered middlewares
      */
     public function getMiddlewares(): array
     {

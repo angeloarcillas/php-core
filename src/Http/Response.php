@@ -26,7 +26,7 @@ class Response
     public const HTTP_SERVICE_UNAVAILABLE = 503;
 
     /**
-     * Check if HTTP status code is valid
+     * Check if the HTTP status code is valid
      */
     public static function isValidCode(int $code): bool
     {
@@ -40,7 +40,7 @@ class Response
     {
         if (!static::isValidCode($code)) {
             throw new \Exception(
-                sprintf('The HTTP status code "%s"', $code)
+                sprintf('The HTTP status code "%s" is invalid', $code)
             );
         }
 

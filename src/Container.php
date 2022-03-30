@@ -3,7 +3,7 @@
 namespace Zeretei\PHPCore;
 
 /**
- * Service cointainer for application 
+ * Service cointainer for Application 
  */
 class Container
 {
@@ -18,7 +18,7 @@ class Container
     protected static array $registry = [];
 
     /**
-     * Register service to the container
+     * Register a service to the container
      */
     public static function bind(string $key, mixed $value): void
     {
@@ -40,15 +40,15 @@ class Container
     }
 
     /**
-     * check if $key exist in the container
+     * check if the $key exists in the container
      */
-    public static function exitst(string $key): bool
+    public static function has(string $key): bool
     {
         return array_key_exists($key, static::$registry);
     }
 
     /**
-     * All registed services
+     * Get all the registed services
      */
     public static function all()
     {

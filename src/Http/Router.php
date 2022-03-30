@@ -41,7 +41,7 @@ class Router
     protected array $attributes = [];
 
     /**
-     * Match the current url with defined routes
+     * Match the current url with the defined routes
      */
     public function resolve(string $uri, string $method): mixed
     {
@@ -96,7 +96,7 @@ class Router
     }
 
     /**
-     * Check if request method is a valid verb.
+     * Check if the request method is a valid verb.
      */
     public function isValidVerb(string $method): bool
     {
@@ -104,7 +104,7 @@ class Router
     }
 
     /**
-     * Set router host
+     * Set the router host
      */
     public function setHost(string $path)
     {

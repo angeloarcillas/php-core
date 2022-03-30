@@ -32,7 +32,7 @@ class QueryBuilder
     }
 
     /**
-     * Fetch a single row from database
+     * Fetch a single row from the database
      */
     public function fetch(string $sql, array $params = []): mixed
     {
@@ -42,7 +42,7 @@ class QueryBuilder
     }
 
     /**
-     * Fetch all row from database
+     * Fetch all the rows from the database
      */
     public function fetchAll(string $sql, array $params = []): array
     {
@@ -52,7 +52,7 @@ class QueryBuilder
     }
 
     /**
-     * Count all rows from database
+     * Count all the rows from the database
      */
     public function count(string $sql, array $params = []): int
     {
